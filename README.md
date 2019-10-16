@@ -3,16 +3,38 @@
 3D graphics engine built on top of LWJGL
 
 ## Features
-    - Model Importer 
-    - Images
-    - Skybox
-    - Entity manipulation 
-    - Texture
+
+- 2D
+    - [X] 2D Sprites
+    - [X] Animations
+    - [X] Skybox
+    - [ ] GUI (NanoVG) 
+    - [ ] Physics
+    - [ ] Particles
     
+- 3D
+    - [X] Model importer (Assimp)
+    - [ ] Animations
+    - [X] Skybox
+    - [ ] Physics
+    - [ ] Particles
+    - [ ] Lights
+    - [X] Outline drawing
     
-    TODO
-    - Lights
-    - Materials
+- Rendering
+    - [X] Texture
+    - [X] Material
+    - [ ] Instanced
+
+- Textures
+    - [X] 2D Texture
+    - [X] 3D Texture
+    - [ ] Texture Atlas
+    - [X] Texture Array
+    
+- Other
+    - [X] Heightmap importer
+    - [X] Object picking (FBO)
     
 ## Hello World
 
