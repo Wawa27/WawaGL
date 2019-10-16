@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class Texture3D extends Texture {
     private final static int TARGET = GL_TEXTURE_CUBE_MAP;
 
-    public Texture3D(Image2D[] images) throws ShaderException {
+    public Texture3D(Image2D[] images) {
         super(TARGET);
 
         bind();
@@ -25,17 +25,6 @@ public class Texture3D extends Texture {
         setWrappingMode();
         setTextureFiltering();
         unbind();
-    }
-
-    @Override
-    public void bind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(TARGET, handle);
-    }
-
-    @Override
-    public void unbind() {
-        glBindTexture(TARGET, 0);
     }
 
     private void uploadData(Image2D[] images) {

@@ -33,11 +33,11 @@ public class Camera implements Bindable, Movable {
         super();
         this.projection = projection;
 
-        this.position = new Vector3f(0.0f, 0, 0);
+        this.position = new Vector3f(0.0f, 0, 1);
         this.direction = new Vector3f(0.0f, 0, -1f);
         this.up = new Vector3f(0.0f, 1.0f, 0.0f);
 
-        this.matrix = new Matrix4f();
+        this.matrix = new Matrix4f().lookAt(position, direction, up);
         ubo = new ViewProjectionUBO(this);
         update();
     }
@@ -54,6 +54,7 @@ public class Camera implements Bindable, Movable {
 
     public void translate(float x, float y, float z) {
         position.add(x, y, z);
+        direction.add(x, y, z);
         update();
     }
 

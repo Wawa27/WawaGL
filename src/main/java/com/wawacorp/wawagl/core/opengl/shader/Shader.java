@@ -2,7 +2,10 @@ package com.wawacorp.wawagl.core.opengl.shader;
 
 import com.wawacorp.wawagl.core.opengl.entity.Entity;
 import com.wawacorp.wawagl.core.opengl.shader.bo.meta.Material;
+import com.wawacorp.wawagl.core.opengl.shader.bo.texture.TextureArray;
+import com.wawacorp.wawagl.core.opengl.shader.bo.texture.TextureAtlas;
 import com.wawacorp.wawagl.core.utils.io.FileUtils;
+import org.joml.Vector2f;
 
 import java.util.HashMap;
 
@@ -68,6 +71,10 @@ public class Shader {
         return true;
     }
 
+    public void setVec2(String name, Vector2f vec2) {
+        glUniform2f(getUniformLocation(name), vec2.x, vec2.y);
+    }
+
     public void updateTransform(Entity entity) {
         int uloc = glGetUniformLocation(program, "model");
         if (uloc >= 0) glUniformMatrix4fv(uloc, false, entity.getModel());
@@ -80,6 +87,16 @@ public class Shader {
             if (uloc >= 0) glUniformMatrix4fv(uloc, false, entities[i].getModel());
             i++;
         }
+    }
+
+    @Deprecated
+    public void setTextureAtlas(TextureAtlas textureAtlas, Vector2f offset) {
+        glUniform1i(getUniformLocation("cellCount"), textureAtlas.getCellCount());
+        glUniform2f(getUniformLocation("offset"), offset.x, offset.y);
+    }
+
+    public void setTextureArrayLayer(int layer) {
+        glUniform1i(getUniformLocation("layer"), layer);
     }
 
     private int getUniformLocation(String uniformName) {
@@ -119,7 +136,15 @@ public class Shader {
     }
 
     public static Shader getTextureShader() {
-        return loadShader("shaders/vert/world_vertex_shader.glsl", "shaders/frag/texture_shader_lights.glsl");
+        return loadShader("shaders/vert/world_vertex_shader.glsl", "shaders/frag/simple_texture.glsl");
+    }
+
+    public static Shader getTextureAtlasShader() {
+        return loadShader("shaders/vert/world_vertex_shader_texture_array.glsl", "shaders/frag/simple_texture.glsl");
+    }
+
+    public static Shader getTextureArrayShader() {
+        return loadShader("shaders/vert/world_vertex_shader_texture.glsl", "shaders/frag/simple_texture_array.glsl");
     }
 
     public static Shader getMaterialShader() {

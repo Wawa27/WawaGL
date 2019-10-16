@@ -1,7 +1,7 @@
 package com.wawacorp.wawagl.core.opengl.event;
 
 import com.wawacorp.wawagl.core.opengl.game.Game;
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.view.View;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 import com.wawacorp.wawagl.core.opengl.shader.bo.FrameBufferObject;
 import com.wawacorp.wawagl.core.opengl.shader.bo.texture.Texture2D;
@@ -31,11 +31,11 @@ public class PickedObjectEvent extends FrameBufferObject {
 
     private final static int FORMAT = GL_RG;
 
-    private final ArrayList<Drawable> pickableObjects;
+    private final ArrayList<View> pickableObjects;
 
     private final Shader pickingShader;
 
-    private Drawable pickedObject;
+    private View pickedObject;
 
     private PickedObjectListener pickedObjectListener;
 
@@ -59,8 +59,8 @@ public class PickedObjectEvent extends FrameBufferObject {
         unbind();
     }
 
-    public void addPickableObject(Drawable drawable) {
-        this.pickableObjects.add(drawable);
+    public void addPickableObject(View view) {
+        this.pickableObjects.add(view);
     }
 
     @Override

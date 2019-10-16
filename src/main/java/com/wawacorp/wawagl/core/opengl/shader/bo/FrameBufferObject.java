@@ -1,13 +1,13 @@
 package com.wawacorp.wawagl.core.opengl.shader.bo;
 
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.view.View;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 import com.wawacorp.wawagl.core.opengl.shader.bo.texture.Texture2D;
 import com.wawacorp.wawagl.core.utils.FixedSizeArrayList;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public abstract class FrameBufferObject extends BufferObject implements Drawable {
+public abstract class FrameBufferObject extends BufferObject implements View {
     public final static int MAX_ATTACHMENT_COUNT = 32;
     private final static int TARGET = GL_FRAMEBUFFER;
     /**

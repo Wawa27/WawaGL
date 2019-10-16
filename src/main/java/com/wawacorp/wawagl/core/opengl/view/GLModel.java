@@ -2,7 +2,7 @@ package com.wawacorp.wawagl.core.opengl.view;
 
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 
-public abstract class GLModel implements Drawable, Movable {
+public abstract class GLModel implements View, Movable {
 
     public GLModel() {
 

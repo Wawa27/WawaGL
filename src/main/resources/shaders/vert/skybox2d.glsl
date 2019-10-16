@@ -13,8 +13,9 @@ layout(std140, binding = 0) uniform ViewProjection {
 };
 
 uniform mat4 model;
+uniform vec2 offset;
 
 void main() {
-    aTexCoord = texCoord;
+    aTexCoord = offset + texCoord;
     gl_Position = projection * view * model * vec4(position, 1.0);
 }

@@ -1,6 +1,6 @@
 package com.wawacorp.wawagl.core.opengl.view.objects;
 
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.view.View;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 
 /**
@@ -10,13 +10,13 @@ import com.wawacorp.wawagl.core.opengl.shader.Shader;
 public class SmoothOutlinedObject extends OutlinedObject {
     private Shader shader;
 
-    public SmoothOutlinedObject(Drawable drawable) {
-        super(drawable);
+    public SmoothOutlinedObject(View view) {
+        super(view);
         shader = Shader.loadShader("shaders/vert/world_vertex_shader_outline_smooth.glsl", "shaders/frag/outline.glsl");
     }
 
     public void draw() {
-        drawable.draw();
+        view.draw();
     }
 
     public void draw(Shader shader) throws UnsupportedOperationException {
@@ -25,6 +25,6 @@ public class SmoothOutlinedObject extends OutlinedObject {
 
     @Override
     public void drawOutline() {
-        drawable.draw(shader);
+        view.draw(shader);
     }
 }

@@ -19,7 +19,7 @@
     package com.wawacorp.wawagl.demo;
     
     import com.wawacorp.wawagl.core.opengl.Color;
-    import com.wawacorp.wawagl.core.opengl.transform.drawable.model.Model;
+    import com.wawacorp.wawagl.core.opengl.transform.view.model.Model;
     import com.wawacorp.wawagl.core.opengl.game.Game;
     import com.wawacorp.wawagl.core.utils.io.AssimpLoader;
     import com.wawacorp.wawagl.core.opengl.view.objects.GameObject;
@@ -41,8 +41,8 @@
             setBackgroundColor(new Color(1, 1, 1, 0));
     
             Model model = ModelAdapter.loadModel("./res/models/boy/boy.fbx");
-            GameObject drawable = new GameObject(model);
-            gameObjects.add(drawable);
+            GameObject view = new GameObject(model);
+            gameObjects.add(view);
         }
     
         @Override

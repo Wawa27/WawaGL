@@ -3,7 +3,6 @@ package com.wawacorp.wawagl.core.opengl.animation;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-// TODO: Shader animation (so the bus don't get flooded)
 public abstract class Animation {
     /**
      * Holds all the active animations
@@ -15,14 +14,14 @@ public abstract class Animation {
     }
 
     /**
-     * Holds the start of the animation in nanoseconds, -1 if hasn't started yet
+     * Holds the start of the animation in milliseconds, -1 if hasn't started yet
      */
-    private long start;
+    protected long start;
 
     /**
      * Duration of the animation in the given time unit
      */
-    private long duration;
+    protected long duration;
 
     /**
      * The animation to start once this one is finished
@@ -42,8 +41,8 @@ public abstract class Animation {
      * @param duration The time of the animation
      * @param timeUnit The time unit of the animation
      */
-    public Animation(int duration, TimeUnit timeUnit) {
-        this.duration = timeUnit.toNanos(duration);
+    public Animation(long duration, TimeUnit timeUnit) {
+        this.duration = timeUnit.toMillis(duration);
         this.start = -1;
     }
 
@@ -53,13 +52,16 @@ public abstract class Animation {
      * This methods should be called once (and only once) per frame (not necessarily on the main thread)
      */
     public static void runAll() {
-        for (Animation animation : activeAnimations) {
-            if (System.nanoTime() < animation.start + animation.duration) { // active
+        for (int i = activeAnimations.size() - 1; i >= 0; i--) {
+            Animation animation = activeAnimations.get(i);
+            if (System.currentTimeMillis() < animation.start + animation.duration) { // active
                 animation.loop();
             } else { // No longer active
-                animation.start = -1;
                 activeAnimations.remove(animation);
-                if (animation.onFinishedAnimation != null) animation.onFinishedAnimation.start();
+                animation.start = -1;
+                if (animation.onFinishedAnimation != null) {
+                    animation.onFinishedAnimation.start();
+                }
             }
         }
     }
@@ -70,8 +72,9 @@ public abstract class Animation {
      */
     public final void start() {
         if (start != -1) return;
-        start = System.nanoTime();
+        start = System.currentTimeMillis();
         activeAnimations.add(this);
+        onStart();
     }
 
     /**
@@ -106,10 +109,10 @@ public abstract class Animation {
     }
 
     /**
-     * @return The time elapsed since the start of the animation, in nanoseconds
+     * @return The time elapsed since the start of the animation, in milliseconds
      */
-    public final long getTime() {
-        return System.nanoTime() - start;
+    public final long getElapsedTime() {
+        return System.currentTimeMillis() - start;
     }
 
     /**
@@ -121,6 +124,11 @@ public abstract class Animation {
     public final void setOnFinishedAnimation(Animation animation) {
         this.onFinishedAnimation = animation;
     }
+
+    /**
+     * This method is called at the start of the animation
+     */
+    protected abstract void onStart();
 
     /**
      * This method is called once every frame

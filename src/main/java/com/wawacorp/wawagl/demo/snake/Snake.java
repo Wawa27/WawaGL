@@ -1,21 +1,22 @@
 package com.wawacorp.wawagl.demo.snake;
 
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
-import org.joml.Vector2i;
+import com.wawacorp.wawagl.core.opengl.view.View;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 
-public class Snake implements Drawable {
+public class Snake implements View {
     private final SnakeHead head;
     private final ArrayList<SnakeBody> body;
-    private final Vector2i position;
 
-    private Vector2i direction = SnakeGame.DIRECTION_UP;
+    private Vector2f currentDirection = SnakeGame.DIRECTION_UP;
+    private Vector2f nextDirection = SnakeGame.DIRECTION_UP;
+
+    private int moveCount = 0;
 
     public Snake() {
-        position = new Vector2i(4, 4);
-        head = new SnakeHead(position.x, position.y);
+        head = new SnakeHead(4, 4);
         body = new ArrayList<>();
     }
 
@@ -26,27 +27,37 @@ public class Snake implements Drawable {
     }
 
     public void move() {
+        if (moveCount == 15) {
+            currentDirection = nextDirection;
+            moveCount = 0;
+        }
+
         for (int i = body.size() - 1; i >= 0; i--) {
             body.get(i).move();
         }
-        position.add(direction);
-        head.setTranslation(position.x, position.y, 0);
-    }
+        head.move(currentDirection);
 
-    public void setDirection(Vector2i direction) {
-        this.direction = direction;
+        moveCount++;
     }
 
     public void addBody() {
         if (body.size() == 0) {
-            body.add(new SnakeBody(position, position.sub(direction, new Vector2i())));
+            body.add(new SnakeBody(head.getCell(), head.getCell().sub(currentDirection.mul(15, new Vector2f()), new Vector2f())));
         } else {
-            body.add(new SnakeBody(body.get(body.size() - 1).getCell(), position.sub(direction, new Vector2i())));
+            body.add(new SnakeBody(body.get(body.size() - 1).getCell(), body.get(body.size() - 1).getCell().sub(currentDirection.mul(15, new Vector2f()), new Vector2f())));
         }
     }
 
-    public Vector2i getCell() {
-        return position;
+    public void setCurrentDirection(Vector2f currentDirection) {
+        this.currentDirection = currentDirection;
+    }
+
+    public void setNextDirection(Vector2f nextDirection) {
+        this.nextDirection = nextDirection;
+    }
+
+    public Vector2f getCell() {
+        return head.getCell();
     }
 
     @Override

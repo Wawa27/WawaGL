@@ -18,8 +18,7 @@ public abstract class Texture extends BufferObject {
     //TODO: bind calls on an already bound texture should result in a NO OP!!
     @Override
     public void bind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, handle);
+        glBindTexture(TARGET, handle);
     }
 
     @Override

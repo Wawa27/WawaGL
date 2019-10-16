@@ -1,6 +1,6 @@
 package com.wawacorp.wawagl.core.opengl.view.objects;
 
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.view.View;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 
 /**
@@ -9,8 +9,8 @@ import com.wawacorp.wawagl.core.opengl.shader.Shader;
 public class ScaleOutlinedObject extends OutlinedObject {
     private Shader shader;
 
-    public ScaleOutlinedObject(Drawable drawable) {
-        super(drawable);
+    public ScaleOutlinedObject(View view) {
+        super(view);
         shader = Shader.loadShader("shaders/vert/world_vertex_shader_outline_scale.glsl", "shaders/frag/outline.glsl");
     }
 

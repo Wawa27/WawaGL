@@ -1,6 +1,7 @@
 package com.wawacorp.wawagl.core.opengl.game;
 
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.animation.Animation;
+import com.wawacorp.wawagl.core.opengl.view.View;
 import com.wawacorp.wawagl.core.opengl.hud.nanovg.Font;
 import com.wawacorp.wawagl.core.opengl.manager.AssetManager;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
@@ -23,12 +24,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * TODO: Singleton because we can only have a single Context
  */
 public abstract class Game {
-    public final static Vector4f DEFAULT_BACKGROUND_COLOR = new Vector4f(1, 0, 0, 1);
+    public final static Vector4f DEFAULT_BACKGROUND_COLOR = new Vector4f(0.2f, 0.2f, 0.2f, 1);
 
     public static int width;
     public static int height;
 
     public static long window;
+
+    public final static long start = System.currentTimeMillis();
 
     /**
      * Time passed since the start of the class
@@ -73,6 +76,8 @@ public abstract class Game {
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, 4); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_STENCIL_BITS, 4);
+        glfwWindowHint(GLFW_SAMPLES, 4);
         setWindowResizable(false);
 
         window = glfwCreateWindow(width, height, "Hello World!", NULL, NULL);
@@ -128,9 +133,12 @@ public abstract class Game {
     //TODO: disable stencil test if there is not outlined objects
     private void loop() {
         System.out.println("Game loaded in : " + ((System.currentTimeMillis() - time) / 1000f) + " seconds");
-        glActiveTexture(0);
         while (!glfwWindowShouldClose(window)) {
-            onLoop();
+            pollEvents(); // I
+            Animation.runAll(); // P
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // P
+            onLoop(); // P
+            apply(); // O
         }
     }
 
@@ -153,7 +161,7 @@ public abstract class Game {
      *
      * @param color The background color (RGBA)
      */
-    public final void setBackgroundColor(Vector4f color) {
+    public static void setBackgroundColor(Vector4f color) {
         glClearColor(color.x, color.y, color.z, color.w);
     }
 
@@ -203,19 +211,19 @@ public abstract class Game {
         outlinedGameObjects.add(gameObject);
     }
 
-    public void removeOutlinedObject(Drawable drawable) {
-        outlinedGameObjects.remove(drawable);
+    public void removeOutlinedObject(View view) {
+        outlinedGameObjects.remove(view);
     }
 
-    public void pollEvents() {
+    public static void pollEvents() {
         glfwPollEvents();
     }
 
-    public void clear(int mask) {
+    public static void clear(int mask) {
         glClear(mask);
     }
 
-    public void apply() {
+    public static void apply() {
         glfwSwapBuffers(window);
     }
 

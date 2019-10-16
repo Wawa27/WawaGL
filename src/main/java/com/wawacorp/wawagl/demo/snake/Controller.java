@@ -16,19 +16,19 @@ public class Controller extends KeyboardListener {
     public void onKeyPressed(int key) {
         switch (key) {
             case GLFW_KEY_UP: {
-                snake.setDirection(DIRECTION_UP);
+                snake.setNextDirection(DIRECTION_UP);
                 break;
             }
             case GLFW_KEY_LEFT: {
-                snake.setDirection(DIRECTION_LEFT);
+                snake.setNextDirection(DIRECTION_LEFT);
                 break;
             }
             case GLFW_KEY_RIGHT: {
-                snake.setDirection(DIRECTION_RIGHT);
+                snake.setNextDirection(DIRECTION_RIGHT);
                 break;
             }
             case GLFW_KEY_DOWN: {
-                snake.setDirection(DIRECTION_DOWN);
+                snake.setNextDirection(DIRECTION_DOWN);
                 break;
             }
         }

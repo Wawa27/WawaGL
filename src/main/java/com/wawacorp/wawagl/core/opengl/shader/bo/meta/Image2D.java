@@ -1,6 +1,8 @@
 package com.wawacorp.wawagl.core.opengl.shader.bo.meta;
 
+import com.wawacorp.wawagl.core.opengl.shader.bo.texture.Texture2D;
 import de.matthiasmann.twl.utils.PNGDecoder;
+import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -8,8 +10,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class Image2D {
+    public final static Image2D RED = new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {(byte) 255, 0, 0, (byte) 255}).flip());
+    public final static Image2D GREEN = new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {0, (byte) 255, 0, (byte) 255}).flip());
+    public final static Image2D BLUE = new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {0, 0, (byte) 255, (byte) 255}).flip());
+    public final static Image2D BLACK = new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {0, 0, 0, (byte) 255}).flip());
+    public final static Image2D TRANSPARENT = new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {0, 0, 0, 0}).flip());
+
     private int width;
     private int height;
     private ByteBuffer data;
@@ -42,11 +51,11 @@ public class Image2D {
     //TODO: 32 bit depth only, should support 16bits too
     private static Image2D loadPNG(InputStream stream) {
         PNGDecoder decoder;
+
         try {
             decoder = new PNGDecoder(stream);
-            ByteBuffer buf = ByteBuffer.allocateDirect(
-                    4 * decoder.getWidth() * decoder.getHeight());
-            decoder.decode(buf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+            ByteBuffer buf = BufferUtils.createByteBuffer(Float.BYTES * decoder.getWidth() * decoder.getHeight());
+            decoder.decode(buf, decoder.getWidth() * Float.BYTES, PNGDecoder.Format.RGBA);
             buf.flip();
 
             return new Image2D(decoder.getWidth(), decoder.getHeight(), buf);
@@ -64,7 +73,6 @@ public class Image2D {
                 for (int j = 0; j < img.getWidth(); j++) {
                     int argb = img.getRGB(j, i);
                     Color color = new Color(argb, true);
-
                     byteBuffer.put((byte) color.getRed()).put((byte) color.getGreen()).put((byte) color.getBlue()).put((byte) color.getAlpha());
                 }
             }

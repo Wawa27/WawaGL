@@ -1,67 +1,51 @@
 package com.wawacorp.wawagl.core.opengl.shader.bo.texture;
 
-import com.wawacorp.wawagl.core.opengl.shader.ShaderException;
 import com.wawacorp.wawagl.core.opengl.shader.bo.meta.Image2D;
 
-import java.nio.ByteBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL46.*;
 
 /**
  * TextureFactory Buffer Object (TextureFactory)
  */
 public class TextureArray extends Texture {
     private final static int TARGET = GL_TEXTURE_2D_ARRAY;
+    private final int imageCount;
 
-    public TextureArray(Image2D[] images) throws ShaderException {
+    public TextureArray(Image2D[] images) {
         super(TARGET);
+        imageCount = images.length;
 
         bind();
         uploadData(images);
-        generateMipmap();
         setWrappingMode();
         setTextureFiltering();
         unbind();
     }
 
-    @Override
-    public void bind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(TARGET, handle);
-    }
-
-    @Override
-    public void unbind() {
-        glBindTexture(TARGET, 0);
-    }
-
     private void uploadData(Image2D[] images) {
+        Image2D image2D = images[0];
+        if (image2D == null) {
+            System.err.println("null image");
+            return;
+        }
+        glTexStorage3D(TARGET, 1, GL_RGBA8, image2D.getWidth(), image2D.getHeight(), imageCount);
         for (int i = 0; i < images.length; i++) {
-            if (images[i] != null) {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, images[i].getWidth(), images[i].getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, images[i].getData());
-            } else {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-            }
+            glTexSubImage3D(TARGET, 0, 0, 0, i, image2D.getWidth(), image2D.getHeight(), 1, GL_RGBA, GL_UNSIGNED_BYTE, images[i].getData());
         }
     }
 
     private void setWrappingMode() {
         glTexParameteri(TARGET, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(TARGET, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(TARGET, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
     private void setTextureFiltering() {
-        glTexParameteri(TARGET, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(TARGET, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(TARGET, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
-    private void generateMipmap() {
-        glGenerateMipmap(TARGET);
+    public int getImageCount() {
+        return imageCount;
     }
 
     @Override

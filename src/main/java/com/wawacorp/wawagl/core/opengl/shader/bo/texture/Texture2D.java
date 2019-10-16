@@ -5,19 +5,24 @@ import com.wawacorp.wawagl.core.opengl.shader.ShaderException;
 import com.wawacorp.wawagl.core.opengl.shader.bo.meta.Image2D;
 import org.lwjgl.BufferUtils;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 /**
  * TextureFactory Buffer Object (TextureFactory)
  */
 public class Texture2D extends Texture {
-    public final static Texture2D DEFAULT = AssetManager.getTexture2D("textures/colors/white.png");
+    public final static Texture2D DEFAULT = new Texture2D(new Image2D(1, 1, BufferUtils.createByteBuffer(4).put(new byte[] {(byte) 255, 0, (byte) 255, (byte) 255}).flip()));
 
     private final static int TARGET = GL_TEXTURE_2D;
     private static Texture2D lastTexture;
+
+    private final int width;
+    private final int height;
 
     /**
      * Creates a texture and fill it with the data provided
@@ -26,6 +31,9 @@ public class Texture2D extends Texture {
      */
     public Texture2D(Image2D image2D) {
         super(TARGET);
+
+        this.width = image2D.getWidth();
+        this.height = image2D.getHeight();
 
         bind();
         uploadData(image2D);
@@ -43,6 +51,9 @@ public class Texture2D extends Texture {
     public Texture2D(int w, int h) {
         super(TARGET);
 
+        this.width = w;
+        this.height = h;
+
         bind();
         uploadData(w, h, null);
         setTextureFiltering();
@@ -58,22 +69,17 @@ public class Texture2D extends Texture {
     }
 
     private void setWrappingMode() {
-        glTexParameteri(TARGET, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(TARGET, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(TARGET, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(TARGET, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
     private void setTextureFiltering() {
-        glTexParameteri(TARGET, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(TARGET, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(TARGET, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
     private void generateMipmap() {
         glGenerateMipmap(TARGET);
-    }
-
-    @Override
-    public void update() {
-
     }
 
     @Override
@@ -86,10 +92,23 @@ public class Texture2D extends Texture {
         lastTexture = this;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
     @Override
     public void unbind() {
         super.unbind();
         lastTexture = null;
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override

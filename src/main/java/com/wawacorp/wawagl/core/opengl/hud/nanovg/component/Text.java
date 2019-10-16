@@ -3,30 +3,37 @@ package com.wawacorp.wawagl.core.opengl.hud.nanovg.component;
 import com.wawacorp.wawagl.core.opengl.hud.HudComponent;
 import com.wawacorp.wawagl.core.opengl.hud.nanovg.Font;
 import com.wawacorp.wawagl.core.opengl.hud.nanovg.NanoVG;
-import com.wawacorp.wawagl.core.opengl.manager.AssetManager;
 
-import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.*;
 
 public class Text extends HudComponent {
     private float x;
     private float y;
-    private StringBuilder text;
-    private Font font;
+    private String text;
+    private float[] bounds;
 
-    public Text(float x, float y, StringBuilder text) {
-        this(x, y, text, AssetManager.DEFAULT_FONT);
-    }
-
-    public Text(float x, float y, StringBuilder text, Font font) {
+    public Text(float x, float y, String text) {
         this.x = x;
         this.y = y;
         this.text = text;
-        this.font = font;
+        this.bounds = new float[6];
+    }
+
+    private final void computeBounds() {
+        nvgTextBounds(NanoVG.CONTEXT, x, y, text, bounds);
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public void draw() {
         Font.ACTIVE.bind();
-        nvgText(NanoVG.CONTEXT, x, y, text.toString());
+        nvgText(NanoVG.CONTEXT, x, y, text);
+    }
+
+    public static void draw(float x, float y, String text) {
+        nvgText(NanoVG.CONTEXT, x, y, text);
     }
 }

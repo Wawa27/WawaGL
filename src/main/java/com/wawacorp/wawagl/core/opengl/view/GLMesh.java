@@ -3,7 +3,7 @@ package com.wawacorp.wawagl.core.opengl.view;
 import com.wawacorp.wawagl.core.opengl.model.model.Mesh;
 import com.wawacorp.wawagl.core.opengl.shader.Shader;
 
-public abstract class GLMesh implements Drawable, Movable {
+public abstract class GLMesh implements View, Movable {
     protected final String name;
     protected Shader shader;
     protected final int vertexCount;

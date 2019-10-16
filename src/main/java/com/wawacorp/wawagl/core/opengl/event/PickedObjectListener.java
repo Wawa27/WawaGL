@@ -1,16 +1,16 @@
 package com.wawacorp.wawagl.core.opengl.event;
 
-import com.wawacorp.wawagl.core.opengl.view.Drawable;
+import com.wawacorp.wawagl.core.opengl.view.View;
 
 public interface PickedObjectListener {
 
     /**
      * Triggered when the cursor is on the object
      */
-    void onHover(Drawable drawable);
+    void onHover(View view);
 
     /**
      * Triggered when the cursor goes outside the object
      */
-    void onLeftHover(Drawable drawable);
+    void onLeftHover(View view);
 }

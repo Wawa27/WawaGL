@@ -4,9 +4,11 @@ import com.wawacorp.wawagl.core.opengl.game.Game;
 import com.wawacorp.wawagl.core.opengl.camera.Camera;
 import com.wawacorp.wawagl.core.opengl.camera.projection.Orthographic;
 import com.wawacorp.wawagl.core.opengl.hud.Hud;
-import com.wawacorp.wawagl.core.opengl.hud.nanovg.component.ImmutableText;
+import com.wawacorp.wawagl.core.opengl.hud.nanovg.component.Text;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
+import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,17 +16,17 @@ public class SnakeGame extends Game {
     public final static int CELL_WIDTH = 32;
     public final static int CELL_HEIGHT = 32;
 
-    public final static Vector2i DIRECTION_UP = new Vector2i(0, 1);
-    public final static Vector2i DIRECTION_DOWN = new Vector2i(0, -1);
-    public final static Vector2i DIRECTION_RIGHT = new Vector2i(1, 0);
-    public final static Vector2i DIRECTION_LEFT = new Vector2i(-1, 0);
+    public final static Vector2f DIRECTION_UP = new Vector2f(0, 1f/15);
+    public final static Vector2f DIRECTION_DOWN = new Vector2f(0, -1f/15);
+    public final static Vector2f DIRECTION_RIGHT = new Vector2f(1f/15, 0);
+    public final static Vector2f DIRECTION_LEFT = new Vector2f(-1f/15, 0);
 
     private final GameObject[] gameObjects;
     private final Snake snake;
     private Orange orange;
 
     private final Hud hud;
-    private final ImmutableText scoreText;
+    private final Text scoreText;
     private int score = 0;
 
     public SnakeGame() {
@@ -38,7 +40,7 @@ public class SnakeGame extends Game {
         }
         snake = new Snake();
         hud = new Hud();
-        scoreText = new ImmutableText(0, 16, "");
+        scoreText = new Text(0, 16, "");
         hud.addComponent(scoreText);
         updateScore();
 
@@ -53,12 +55,28 @@ public class SnakeGame extends Game {
         new Controller(snake);
     }
 
-    private Vector2i getRandomCell() {
-        return new Vector2i((int) (Math.random() * CELL_WIDTH), (int) (Math.random() * CELL_HEIGHT));
+    private Vector2f getRandomCell() {
+        return new Vector2f((int) (Math.random() * CELL_WIDTH), (int) (Math.random() * CELL_HEIGHT));
     }
 
     @Override
     public void onLoop() {
+        long start = System.currentTimeMillis();
+
+        // Process Input
+        pollEvents();
+
+        // Update game
+        snake.move();
+
+        if ((Math.abs(snake.getCell().x - orange.getCell().x) < .001f) && (Math.abs(snake.getCell().y - orange.getCell().y) < .001f)) {
+            score++;
+            updateScore();
+            snake.addBody();
+            orange = new Orange(getRandomCell());
+        }
+
+        // Render
         Camera.ACTIVE.bind();
         clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -72,30 +90,21 @@ public class SnakeGame extends Game {
 
         hud.draw();
 
-        snake.move();
-        if (snake.getCell().equals(orange.getCell())) {
-            score++;
-            updateScore();
-            snake.addBody();
-            orange = new Orange(getRandomCell());
-        }
         Camera.ACTIVE.unbind();
 
         apply();
-        sleep(1);
+
+        // Sleep
+        try {
+            sleep((long) ((start + 16.666 - System.currentTimeMillis()) / 1000f));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateScore() {
         String text = "Score: " + score;
         scoreText.setText(text);
-    }
-
-    public void sleep(int seconds) {
-        long time = System.currentTimeMillis();
-        while ((System.currentTimeMillis() - time) < seconds * 100) {
-            pollEvents();
-            if (glfwWindowShouldClose(window)) break;
-        }
     }
 
     public static void main(String[] args) {
