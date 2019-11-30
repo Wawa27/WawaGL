@@ -1,8 +1,11 @@
 package com.wawacorp.wawagl.core.utils.io;
 
-import com.wawacorp.wawagl.core.opengl.shader.bo.meta.Material;
-import com.wawacorp.wawagl.core.opengl.model.model.Mesh;
-import com.wawacorp.wawagl.core.opengl.model.model.Model;
+import com.wawacorp.wawagl.core.manager.AssetManager;
+import com.wawacorp.wawagl.core.model.Bitmap;
+import com.wawacorp.wawagl.core.model.Material;
+import com.wawacorp.wawagl.core.model.Mesh;
+import com.wawacorp.wawagl.core.model.Model;
+import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
@@ -69,9 +72,9 @@ public class AssimpLoader {
         };
         fileIo.set(fileOpenProc, fileCloseProc, NULL);
         AIScene scene = Assimp.aiImportFileEx(relativePath,
-                        aiProcess_Triangulate |
-                                aiProcess_DropNormals |
-                                aiProcess_GenSmoothNormals |
+                aiProcess_Triangulate |
+                        aiProcess_DropNormals |
+                        aiProcess_GenSmoothNormals |
                         aiProcess_FlipUVs, fileIo);
         System.out.println("finished loading");
         if (scene == null) {
@@ -131,40 +134,37 @@ public class AssimpLoader {
 
     private static void toMesh(AIScene scene, String folderPath, Mesh mesh, AIMesh aiMesh) {
         AIMaterial aiMaterial = AIMaterial.create(scene.mMaterials().get(aiMesh.mMaterialIndex()));
-        AIString path = AIString.create();
-        if (aiGetMaterialTextureCount(aiMaterial, aiTextureType_DIFFUSE) > 0) {
-            if (aiReturn_SUCCESS != aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null)) {
-                System.err.println("Error loading texture");
-                return;
-            }
-            String textPath = path.dataString();
-            if (textPath != null) {
-                mesh.setTexturePath(folderPath + textPath);
-            }
-        }
         Material material = getMaterial(aiMaterial);
         mesh.setMaterial(material);
     }
 
-    private static Material getMaterial(AIMaterial material) {
-        Material.Builder builder = new Material.Builder();
-        System.out.println("Material : ");
+    private static Material getMaterial(AIMaterial aiMaterial) {
+        Material material = new Material();
+
+        AIString path = AIString.create();
+        if (aiGetMaterialTextureCount(aiMaterial, aiTextureType_DIFFUSE) > 0) {
+            if (aiReturn_SUCCESS != aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null)) {
+                System.err.println("Error loading texture");
+            }
+            String textPath = path.dataString();
+            material.setTexturePath(AssetManager.getTexture2D(textPath));
+        }
 
         Vector4f vector4f;
         AIColor4D color = AIColor4D.create();
-        aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, 0, 0, color);
+        aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, 0, 0, color);
         vector4f = new Vector4f(color.r(), color.g(), color.b(), color.a());
-        builder.ambient(vector4f);
+        material.setAmbient(vector4f);
 
-        aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, 0, 0, color);
+        aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, 0, 0, color);
         vector4f = new Vector4f(color.r(), color.g(), color.b(), color.a());
-        builder.diffuse(vector4f);
+        material.setDiffuse(vector4f);
 
-        aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, 0, 0, color);
+        aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, 0, 0, color);
         vector4f = new Vector4f(color.r(), color.g(), color.b(), color.a());
-        builder.specular(vector4f);
+        material.setSpecular(vector4f);
 
-        return builder.build();
+        return material;
     }
 
     private static float[] getVertices3D(int size, AIVector3D.Buffer buffer) {

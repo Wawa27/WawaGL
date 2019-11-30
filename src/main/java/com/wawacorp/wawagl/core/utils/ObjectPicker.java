@@ -1,6 +1,6 @@
 package com.wawacorp.wawagl.core.utils;
 
-import com.wawacorp.wawagl.core.opengl.view.GLMesh;
+import com.wawacorp.wawagl.core.view.GLMesh;
 
 import java.util.ArrayList;
 

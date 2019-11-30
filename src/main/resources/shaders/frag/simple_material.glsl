@@ -2,6 +2,7 @@
 
 struct Material {
     vec3 ambient;
+    sampler2D ambient_texture;
     vec3 diffuse;
     vec3 specular;
     vec3 emissive;
@@ -13,20 +14,12 @@ struct Material {
 
 in vec3 aPosition;
 in vec3 aNormal;
+in vec2 aTexCoord;
 
 out vec4 gl_FragColor;
 
-uniform Material material = {
-    vec3(1, 1, 1),
-    vec3(1, 1, 1),
-    vec3(1, 1, 1),
-    vec3(1, 1, 1),
-    1.0,
-    1.0,
-    1.0,
-    1
-};
+uniform Material material;
 
 void main() {
-    gl_FragColor = vec4(material.ambient, 1.0);
+    gl_FragColor = vec4(material.ambient, 1.0) * texture(material.ambient_texture, aTexCoord);
 }

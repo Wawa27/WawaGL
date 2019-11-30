@@ -4,7 +4,7 @@ terrain.party README
 Hooray! You've exported some stuff from terrain.party v1.2!
 
 If you should want to export this again for any reason:
-  http://terrain.party/api/export?name=yes&box=23.949464,61.576125,23.609758,61.414429
+  http://terrain.party/api/export?name=yes&tilePhysic=23.949464,61.576125,23.609758,61.414429
 
 Now: what did you get?
 

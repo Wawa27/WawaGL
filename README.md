@@ -42,9 +42,9 @@
     
     import com.wawacorp.wawagl.core.opengl.Color;
     import com.wawacorp.wawagl.core.opengl.transform.view.model.Model;
-    import com.wawacorp.wawagl.core.opengl.game.Game;
+    import com.wawacorp.wawagl.core.game.Game;
     import com.wawacorp.wawagl.core.utils.io.AssimpLoader;
-    import com.wawacorp.wawagl.core.opengl.view.objects.GameObject;
+    import com.wawacorp.wawagl.core.objects.GameObject;
     
     import java.util.ArrayList;
     
