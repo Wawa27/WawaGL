@@ -21,6 +21,9 @@
     - [ ] Lights
     - [X] Outline drawing
     
+- OpenAL
+    Soon...
+    
 - Rendering
     - [X] Texture
     - [X] Material
