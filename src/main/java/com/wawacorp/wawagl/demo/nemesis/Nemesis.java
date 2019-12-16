@@ -12,6 +12,7 @@ public class Nemesis extends Game {
     public static void main(String[] args) {
         Game game = new Nemesis(960, 540);
         game.setScene(new GameScene());
+        game.setBackgroundColor(new Vector4f(.51f, .51f, .51f, 1));
         game.start();
     }
 }

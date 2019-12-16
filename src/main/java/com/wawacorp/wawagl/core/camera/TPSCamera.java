@@ -1,117 +1,123 @@
 package com.wawacorp.wawagl.core.camera;
 
+import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.model.entity.Player;
 import com.wawacorp.wawagl.core.camera.projection.Projection;
 import org.joml.Vector3f;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import java.util.Observable;
+import java.util.Observer;
 
-public class TPSCamera extends Camera {
+public class TPSCamera extends Camera implements Observer {
+    protected final Entity player;
+
+    // position of camera = position of player + distance * angle
+    protected final Vector3f position;
+
+    /**
+     * Distance from the player
+     */
+    protected float distance;
+
+    /**
+     * Angle from the player and the camera
+     */
+    protected float angleZ;
+    protected float angleY;
+
     // direction of camera
     protected final Vector3f center;
     // up vector
     protected final Vector3f up;
 
-    protected float angleX;
-    protected float angleY;
+    protected final Vector3f rotation;
 
-    protected final Player player;
-    protected final Vector3f distance;
+    protected int height;
 
-    public TPSCamera(Player player, Vector3f distance, Projection projection) {
+    public TPSCamera(Projection projection, Entity player, float distance, float angleZ, float angleY) {
+        this(projection, player, distance, angleZ, angleY, 2);
+    }
+
+    public TPSCamera(Projection projection, Entity player, float distance, float angleZ, float angleY, int height) {
         super(projection);
         this.player = player;
+        this.position = new Vector3f();
+        this.rotation = new Vector3f();
+        player.addObserver(this);
         this.distance = distance;
-        angleX = (float) Math.PI;
+        this.angleZ = angleZ;
+        this.angleY = angleY;
         center = new Vector3f();
         up = new Vector3f(0, 1, 0);
-        update();
-    }
-
-    public void mouse(float x, float y) {
-        angleX += x;
-        angleY += y;
-        center.set(getDirection());
-        distance.set(getDirection());
-        update();
-    }
-
-    public Vector3f getRight() {
-        return new Vector3f(
-                (float) sin(angleX - 3.14f / 2.0f),
-                0,
-                (float) cos(angleX - 3.14f / 2.0f)
-        );
-    }
-
-    public void forward() {
-        Vector3f direction = getDirection();
-        Vector3f directionNoClip = new Vector3f(direction.x, 0, direction.z).normalize();
-        player.getPosition().add(directionNoClip);
-        update();
-        player.update();
-    }
-
-    public void backward() {
-        Vector3f direction = getDirection();
-        Vector3f directionNoClip = new Vector3f(direction.x, 0, direction.z).normalize();
-        player.getPosition().sub(directionNoClip);
-        update();
-        player.update();
-    }
-
-    public void left() {
-        Vector3f direction = getRight();
-        Vector3f directionNoClip = new Vector3f(direction.x, 0, direction.z).normalize();
-        player.getPosition().sub(directionNoClip);
-        update();
-        player.update();
-    }
-
-    public void right() {
-        Vector3f direction = getRight();
-        Vector3f directionNoClip = new Vector3f(direction.x, 0, direction.z).normalize();
-        player.getPosition().add(directionNoClip);
-        update();
-        player.update();
-    }
-
-    public void up() {
-        player.getPosition().add(up);
-        update();
-        player.update();
+        this.height = height;
+        update(null, null);
     }
 
     @Override
-    public void down() {
-        player.getPosition().sub(up);
-        player.update();
-        update();
-    }
-
-    @Override
-    public void setPosition(float x, float y, float z) {
-        player.setTranslation(x, y, z);
-        update();
-        player.update();
-    }
-
-    public Vector3f getDirection() {
-        return new Vector3f(
-                (float) (cos(angleY) * sin(angleX)),
-                (float) (sin(angleY)),
-                (float) (cos(angleY) * cos(angleX))
-        );
-    }
-
-    @Override
-    public void update() {
+    public void update(Observable observable, Object o) {
+        updateCameraPosition();
         viewMatrix.setLookAt(
-                player.getPosition().add(distance, new Vector3f()),
-                center.add(player.getPosition().add(distance, new Vector3f()), new Vector3f()),
+                position,
+                new Vector3f(
+                        player.getPosition().x,
+                        player.getPosition().y + height,
+                        player.getPosition().z
+                ),
                 up
         );
-        super.update();
+        update();
+    }
+
+    public float calculateHorizontalOffset() {
+        return distance * (float) Math.cos(angleZ);
+    }
+
+    public float calculateVerticalOffset() {
+        return distance * (float) Math.sin(angleZ);
+    }
+
+    public void updateCameraPosition() {
+        float verticalOffset = calculateVerticalOffset();
+        float horizontalOffset = calculateHorizontalOffset();
+        float cameraAngleY = player.getRotation().y + angleY;
+        float offsetX = (float) (horizontalOffset * Math.sin(cameraAngleY));
+        float offsetZ = (float) (horizontalOffset * Math.cos(cameraAngleY));
+        position.x = player.getPosition().x - offsetX;
+        position.y = player.getPosition().y + verticalOffset;
+        position.z = player.getPosition().z - offsetZ;
+    }
+
+    public void setAngleY(float angleY) {
+        this.angleY = angleY;
+        update(null, null);
+    }
+
+    public void setAngleZ(float angleZ) {
+        if (angleZ > Math.PI / 4) {
+            angleZ = (float) Math.PI / 4;
+        }
+        if (angleZ < -Math.PI / 4) {
+            angleZ = (float) -Math.PI / 4;
+        }
+        this.angleZ = angleZ;
+        update(null, null);
+    }
+
+    public void setDistance(float distance) {
+        if (distance < 1f) distance = 1;
+        this.distance = distance;
+        update(null, null);
+    }
+
+    public float getAngleY() {
+        return angleY;
+    }
+
+    public float getAngleZ() {
+        return angleZ;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 }

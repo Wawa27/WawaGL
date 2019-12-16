@@ -1,6 +1,7 @@
 package com.wawacorp.wawagl.core.model.shape;
 
 
+import com.wawacorp.wawagl.core.model.Material;
 import com.wawacorp.wawagl.core.model.Mesh;
 
 public class Shape extends Mesh {

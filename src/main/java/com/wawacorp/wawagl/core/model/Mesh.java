@@ -1,7 +1,10 @@
 package com.wawacorp.wawagl.core.model;
 
+import com.wawacorp.wawagl.core.model.animation.Armature;
+import com.wawacorp.wawagl.core.model.animation.Bone;
+import com.wawacorp.wawagl.core.model.animation.SkeletalAnimation;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Mesh implements Serializable {
     protected String name;
@@ -9,14 +12,16 @@ public class Mesh implements Serializable {
     protected float[] vertices;
     protected float[] normals;
     protected float[] texCoords;
+    protected float[] colors;
     protected int[] indices;
 
-    protected Material material;
+    private Armature armature;
 
-    private ArrayList<Mesh> meshes;
+    protected Material material;
+    protected MaterialTexture texture;
 
     public Mesh() {
-        meshes = new ArrayList<>();
+
     }
 
     public Mesh(String name, float[] vertices, float[] normals, float[] texCoords, int[] indices) {
@@ -25,8 +30,15 @@ public class Mesh implements Serializable {
         this.normals = normals;
         this.texCoords = texCoords;
         this.indices = indices;
+    }
 
-        meshes = new ArrayList<>();
+    public Mesh(String name, float[] vertices, float[] normals, float[] texCoords, int[] indices, Armature armature) {
+        this.name = name;
+        this.vertices = vertices;
+        this.normals = normals;
+        this.texCoords = texCoords;
+        this.indices = indices;
+        this.armature = armature;
     }
 
     public float[] getVertices() {
@@ -35,6 +47,10 @@ public class Mesh implements Serializable {
 
     public void setVertices(float[] vertices) {
         this.vertices = vertices;
+    }
+
+    public void setVertex(int indice, float value) {
+        this.vertices[indice] = value;
     }
 
     public float[] getNormals() {
@@ -49,16 +65,8 @@ public class Mesh implements Serializable {
         return texCoords;
     }
 
-    public void setTexCoords(float[] texCoords) {
-        this.texCoords = texCoords;
-    }
-
     public int[] getIndices() {
         return indices;
-    }
-
-    public void setIndices(int[] indices) {
-        this.indices = indices;
     }
 
     public String getName() {
@@ -77,12 +85,36 @@ public class Mesh implements Serializable {
         return material;
     }
 
-    public void addMesh(Mesh mesh) {
-        meshes.add(mesh);
+    public void setColors(float[] colors) {
+        this.colors = colors;
     }
 
-    public ArrayList<Mesh> getMeshes() {
-        return meshes;
+    public void setIndices(int[] indices) {
+        this.indices = indices;
+    }
+
+    public void setTexCoords(float[] texCoords) {
+        this.texCoords = texCoords;
+    }
+
+    public float[] getColors() {
+        return colors;
+    }
+
+    public void setTexture(MaterialTexture texture) {
+        this.texture = texture;
+    }
+
+    public MaterialTexture getTexture() {
+        return texture;
+    }
+
+    public void setArmature(Armature armature) {
+        this.armature = armature;
+    }
+
+    public Armature getArmature() {
+        return armature;
     }
 
     @Override

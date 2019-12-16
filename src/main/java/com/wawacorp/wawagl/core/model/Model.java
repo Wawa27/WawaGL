@@ -1,13 +1,20 @@
 package com.wawacorp.wawagl.core.model;
 
+import com.wawacorp.wawagl.core.animation.Animation;
+import com.wawacorp.wawagl.core.model.animation.SkeletalAnimation;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Model {
     private String name;
 
+    private Model parent;
     private ArrayList<Mesh> meshes;
     private ArrayList<Model> models;
+
+    private SkeletalAnimation[] skeletalAnimation;
+    private SkeletalAnimation currentAnimation;
 
     public Model(String name) {
         this(name, new ArrayList<>());
@@ -28,6 +35,17 @@ public class Model {
 
     public ArrayList<Mesh> getMeshes() { return meshes; }
 
+    /**
+     * Returns an array of meshes containing all the meshes of this model, and every sub meshes of this model
+     */
+    public ArrayList<Mesh> getAllMeshes() {
+        ArrayList<Mesh> meshes = new ArrayList<>(this.meshes);
+        for (Model model : models) {
+            meshes.addAll(model.getAllMeshes());
+        }
+        return meshes;
+    }
+
     public ArrayList<Model> getModels() { return models; }
 
     public String getName() { return name; }
@@ -44,6 +62,52 @@ public class Model {
             if (mesh != null) return mesh;
         }
         return null;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Model getParent() {
+        return parent;
+    }
+
+    public void setParent(Model parent) {
+        this.parent = parent;
+    }
+
+    public void setMeshes(ArrayList<Mesh> meshes) {
+        this.meshes = meshes;
+    }
+
+    public void setModels(ArrayList<Model> models) {
+        this.models = models;
+    }
+
+    public SkeletalAnimation[] getSkeletalAnimation() {
+        return skeletalAnimation;
+    }
+
+    public void setSkeletalAnimation(SkeletalAnimation[] skeletalAnimation) {
+        this.skeletalAnimation = skeletalAnimation;
+    }
+
+    public void startAnimation() {
+        skeletalAnimation[0].start();
+        skeletalAnimation[0].setAnimationEndListener(this::startAnimation);
+    }
+
+    public void startAnimation(String name) {
+        for (SkeletalAnimation animation : skeletalAnimation) {
+            if (animation.getName().equals(name)) {
+                animation.start();
+                currentAnimation = animation;
+            }
+        }
+    }
+
+    public SkeletalAnimation getCurrentAnimation() {
+        return currentAnimation;
     }
 
     @Override

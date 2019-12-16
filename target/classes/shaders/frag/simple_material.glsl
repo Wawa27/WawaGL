@@ -21,5 +21,5 @@ out vec4 gl_FragColor;
 uniform Material material;
 
 void main() {
-    gl_FragColor = vec4(material.ambient, 1.0) * texture(material.ambient_texture, aTexCoord);
+    gl_FragColor = vec4(material.ambient * texture(material.ambient_texture, aTexCoord).xyz, 1.0);
 }

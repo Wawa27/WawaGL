@@ -98,13 +98,11 @@ public class FPSCameraNoClip extends Camera {
         update();
     }
 
-    @Override
     public void down() {
         eye.sub(up);
         update();
     }
 
-    @Override
     public void setPosition(float x, float y, float z) {
         eye.set(x, y, z);
         update();

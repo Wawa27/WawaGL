@@ -238,7 +238,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.wawacorp.wawagl.demo.single.SingleMeshDemo
+                                        com.wawacorp.wawagl.demo.animation.AnimationDemo
                                     </mainClass>
                                 </manifest>
                             </archive>

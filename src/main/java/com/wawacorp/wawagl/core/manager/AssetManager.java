@@ -1,11 +1,11 @@
 package com.wawacorp.wawagl.core.manager;
 
 import com.wawacorp.wawagl.core.model.SpriteSheet2D;
-import com.wawacorp.wawagl.core.view.hud.nanovg.Font;
+import com.wawacorp.wawagl.core.view.gui.nanovg.Font;
 import com.wawacorp.wawagl.core.model.Bitmap;
-import com.wawacorp.wawagl.core.buffer.texture.Texture2D;
-import com.wawacorp.wawagl.core.buffer.texture.Texture2DArray;
-import com.wawacorp.wawagl.core.buffer.texture.TextureAtlas;
+import com.wawacorp.wawagl.core.view.buffer.texture.Texture2D;
+import com.wawacorp.wawagl.core.view.buffer.texture.Texture2DArray;
+import com.wawacorp.wawagl.core.view.buffer.texture.TextureAtlas;
 
 import java.io.File;
 import java.io.IOException;

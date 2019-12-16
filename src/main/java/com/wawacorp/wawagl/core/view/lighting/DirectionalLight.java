@@ -20,21 +20,6 @@ public class DirectionalLight extends Light {
         super.draw();
     }
 
-    @Override
-    public void scale(float x, float y, float z) {
-        super.scale(x, y, z);
-    }
-
-    @Override
-    public void translate(float x, float y, float z) {
-        super.translate(x, y, z);
-    }
-
-    @Override
-    public void rotate(float x, float y, float z) {
-        super.rotate(x, y, z);
-    }
-
     public Vector4f getDirection() {
         return direction;
     }
@@ -50,11 +35,6 @@ public class DirectionalLight extends Light {
 
     public void setColor(Vector3f color) {
         this.color = color;
-    }
-
-    public void setPosition(float x, float y, float z) {
-        super.getPosition().set(x, y, z, 0);
-        updateTransform();
     }
 
     @Override

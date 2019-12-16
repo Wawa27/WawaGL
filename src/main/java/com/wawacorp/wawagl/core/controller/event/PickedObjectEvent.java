@@ -3,8 +3,8 @@ package com.wawacorp.wawagl.core.controller.event;
 import com.wawacorp.wawagl.core.game.Game;
 import com.wawacorp.wawagl.core.view.View;
 import com.wawacorp.wawagl.core.shader.Shader;
-import com.wawacorp.wawagl.core.buffer.FrameBufferObject;
-import com.wawacorp.wawagl.core.buffer.texture.Texture2D;
+import com.wawacorp.wawagl.core.view.buffer.FrameBufferObject;
+import com.wawacorp.wawagl.core.view.buffer.texture.Texture2D;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 

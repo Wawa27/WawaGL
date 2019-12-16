@@ -1,20 +1,27 @@
 package com.wawacorp.wawagl.core.shader;
 
+import com.wawacorp.wawagl.core.model.animation.Armature;
+import com.wawacorp.wawagl.core.view.buffer.texture.Texture;
+import com.wawacorp.wawagl.core.model.FlatColor;
 import com.wawacorp.wawagl.core.model.entity.Entity;
-import com.wawacorp.wawagl.core.model.entity.TextureArrayEntity;
 import com.wawacorp.wawagl.core.model.Material;
-import com.wawacorp.wawagl.core.buffer.texture.TextureAtlas;
-import com.wawacorp.wawagl.core.utils.io.FileUtils;
+import com.wawacorp.wawagl.core.view.buffer.texture.TextureAtlas;
+import com.wawacorp.wawagl.core.utils.FileUtils;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL46.*;
 
 public class Shader {
     private final int program;
+
+    public final static String VERTEX_PATH = "shaders/vertex/";
+    public final static String FRAGMENT_PATH = "shaders/fragment/";
 
     private HashMap<String, Integer> locations;
 
@@ -48,6 +55,33 @@ public class Shader {
         return null;
     }
 
+    public static Shader loadShaderRelative(String vertexPath, String fragmentPath) {
+        int program = glCreateProgram();
+
+        int vertex = loadShader(GL_VERTEX_SHADER, VERTEX_PATH + vertexPath + ".glsl");
+        int fragment = loadShader(GL_FRAGMENT_SHADER, FRAGMENT_PATH + fragmentPath + ".glsl");
+
+        if (vertex > 0 && fragment > 0) {
+            glAttachShader(program, vertex);
+            glAttachShader(program, fragment);
+
+            glLinkProgram(program);
+            if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+                System.err.println(glGetProgramInfoLog(program));
+                return null;
+            }
+
+            glValidateProgram(program);
+            if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+                System.err.println(glGetProgramInfoLog(program));
+                return null;
+            }
+            return new Shader(program);
+        }
+
+        return null;
+    }
+
     //TODO: bind calls on an already bound shader should result in a NO OP!!
     public void bind() {
         glUseProgram(program);
@@ -62,6 +96,10 @@ public class Shader {
         return true;
     }
 
+    /**
+     * Deprecated by {@link #uploadMaterial(Material)}
+     */
+    @Deprecated
     public boolean setMaterial(Material material) {
         int uloc = glGetUniformLocation(program, "material.ambient");
         glUniform3f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z);
@@ -73,19 +111,137 @@ public class Shader {
         return true;
     }
 
+    @Deprecated
+    public void uploadMaterial(Material material) {
+        int uloc = glGetUniformLocation(program, "material.ambient");
+        glUniform3f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z);
+        uloc = glGetUniformLocation(program, "material.diffuse");
+        glUniform3f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z);
+        uloc = glGetUniformLocation(program, "material.specular");
+        glUniform3f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z);
+    }
+
+    public void uploadMaterial(String name, Material material) {
+        int uloc = glGetUniformLocation(program, name + ".ambient");
+        glUniform3f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z);
+        uloc = glGetUniformLocation(program, name + ".diffuse");
+        glUniform3f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z);
+        uloc = glGetUniformLocation(program, name + ".specular");
+        glUniform3f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z);
+    }
+
+    @Deprecated
+    public void uploadFlatColor(FlatColor color) {
+        uploadVector4f("color.ambient", color.getAmbient());
+    }
+
+    public void uploadFlatColor(String name, FlatColor color) {
+        uploadVector4f(name + ".ambient", color.getAmbient());
+        uploadVector4f(name + ".diffuse", color.getAmbient());
+    }
+
+    @Deprecated
+    public void uploadTexture(Texture texture) {
+        glActiveTexture(0);
+        texture.bind();
+    }
+
+    public void uploadTexture(int textureIndex, Texture texture) {
+        glActiveTexture(GL_TEXTURE0 + textureIndex);
+        texture.bind();
+    }
+
+    public void uploadMaterialTexture(int textureIndex, Texture texture) {
+        glActiveTexture(textureIndex);
+        texture.bind();
+    }
+
+    @Deprecated
+    public void uploadEntity(Entity entity) {
+        uploadMatrix4fv("model", entity.getModel());
+    }
+
+    public void uploadEntity(String name, Entity entity) {
+        uploadMatrix4fv(name, entity.getModel());
+    }
+
     public void setVec2(String name, Vector2f data) {
         glUniform2f(getUniformLocation(name), data.x, data.y);
+    }
+
+    /**
+     * Uploads the Vector3f to the specified location
+     * Shader must be bound before calling this method
+     * @param name The name of the GLSL <b>vec3</b> variable
+     * @param data The Vector3f to upload to the location
+     */
+    public void setVector3f(String name, Vector3f data) {
+        glUniform3f(getUniformLocation(name), data.x, data.y, data.z);
+    }
+
+    /**
+     * Uploads the Vector4f to the specified location
+     * Shader must be bound before calling this method
+     * @param name The name of the GLSL vec4 variable
+     * @param data The data to upload to the location
+     */
+    public void uploadVector4f(String name, Vector4f data) {
+        glUniform4f(getUniformLocation(name), data.x, data.y, data.z, data.w);
+    }
+
+    /**
+     * Uploads the Vector4f to the specified location
+     * Shader must be bound before calling this method
+     * @param name The name of the GLSL vec4 variable
+     * @param data The data to upload to the location
+     */
+    public void uploadMatrix4fv(String name, float[] data) {
+        glUniformMatrix4fv(getUniformLocation(name), false, data);
+    }
+
+    /**
+     * Uploads the Vector4f to the specified location
+     * Shader must be bound before calling this method
+     * @param name The name of the GLSL vec4 variable
+     * @param data The data to upload to the location
+     */
+    public void uploadMatrix4fv(String name, Matrix4f data) {
+        glUniformMatrix4fv(getUniformLocation(name), false, data.get(new float[16]));
+    }
+
+    public void uploadArmature(String name, Armature armature) {
+        for (int i = 0; i < armature.getBoneTransforms().length; i++) {
+            uploadMatrix4fv(name + "[" + i + "]", armature.getBoneTransforms()[i]);
+        }
+    }
+
+    /**
+     * Uploads the Vector4f to the specified location
+     * Shader must be bound before calling this method
+     * @param name The name of the GLSL vec4 variable
+     * @param data The data to upload to the location
+     */
+    public void setMatrix4f(String name, Matrix4f data) {
+        glUniform4fv(getUniformLocation(name), data.get(new float[16]));
     }
 
     public void setIntArray(String name, int[] data) {
         glUniform1iv(getUniformLocation(name), data);
     }
 
+    /**
+     * Deprecated by {@link #uploadEntity(Entity)}
+     */
+    @Deprecated
     public void updateTransform(Entity entity) {
         int uloc = glGetUniformLocation(program, "model");
         if (uloc >= 0) glUniformMatrix4fv(uloc, false, entity.getModel());
     }
 
+    /**
+     * Deprecated by {@link #uploadEntity(Entity)}
+     */
+    @Deprecated
     public void updateTransform(Entity[] entities) {
         int i = 0;
         while (i < entities.length && entities[i] != null) {
@@ -95,24 +251,16 @@ public class Shader {
         }
     }
 
+    /**
+     * Deprecated by {@link #uploadEntity(Entity)}
+     */
+    @Deprecated
     public void updateTransform(List<? extends Entity> entities) {
         for (int i = 0; i < entities.size(); i++) {
             int uloc = getUniformLocation("models[" + i + "]");
-            glUniformMatrix4fv(uloc, false, entities.get(i).getModel());
-        }
-    }
-
-    public void updateLayers(TextureArrayEntity[] entities) {
-        int i = 0;
-        while (i < entities.length && entities[i] != null) {
-            glUniform1i(getUniformLocation("layers[" + i + "]"), entities[i].getLayer());
-            i++;
-        }
-    }
-
-    public void updateLayers(List<TextureArrayEntity> entities) {
-        for (int i = 0; i < entities.size(); i++) {
-            glUniform1i(getUniformLocation("layers[" + i + "]"), entities.get(i).getLayer());
+            if (entities.get(i) != null) {
+                glUniformMatrix4fv(uloc, false, entities.get(i).getModel());
+            }
         }
     }
 
@@ -129,7 +277,7 @@ public class Shader {
     /**
      * Get the shader's uniform location
      * @param uniformName
-     * @return
+     * @return -1 if the variable was not found, 0 and + otherwise
      */
     private int getUniformLocation(String uniformName) {
         Integer location;
@@ -168,34 +316,18 @@ public class Shader {
     }
 
     public static Shader getTextureShader() {
-        return loadShader("shaders/vert/world_vertex_shader.glsl", "shaders/frag/simple_texture.glsl");
+        return loadShaderRelative("single", "single_texture");
     }
 
-    public static Shader getTextureAtlasShader() {
-        return loadShader("shaders/vert/world_vertex_shader_texture_array.glsl", "shaders/frag/simple_texture.glsl");
+    public static Shader getFlatColorShader() {
+        return loadShaderRelative("single", "single_material");
     }
 
-    public static Shader getTextureArrayShader() {
-        return loadShader("shaders/vert/world_vertex_shader_texture.glsl", "shaders/frag/simple_texture_array.glsl");
+    public static Shader getMultipleFlatColorShader() {
+        return loadShaderRelative("multiple", "multiple_flat_color");
     }
 
     public static Shader getMaterialShader() {
-        return loadShader("shaders/vert/world_vertex_shader.glsl", "shaders/frag/simple_material.glsl");
-    }
-
-    public static Shader getInstancedMaterialShader() {
-        return loadShader("shaders/vert/instanced_world_vertex_shader.glsl", "shaders/frag/simple_material.glsl");
-    }
-
-    public static Shader getInstancedTextureShader() {
-        return loadShader("shaders/vert/instanced_world_vertex_shader.glsl",  "shaders/frag/texture_shader_lights.glsl");
-    }
-
-    public static Shader getInstancedTextureArrayShader() {
-        return loadShader("shaders/vert/instanced_world_vertex_shader_texture_array.glsl",  "shaders/frag/instanced_texture_array.glsl");
-    }
-
-    public static Shader getDefaultShader() {
-        return loadShader("shaders/vert/default.glsl",  "shaders/frag/default.glsl");
+        return loadShaderRelative("single", "single_material");
     }
 }

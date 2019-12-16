@@ -1,11 +1,10 @@
 package com.wawacorp.wawagl.core.game;
 
-import com.wawacorp.wawagl.core.animation.Animation;
 import com.wawacorp.wawagl.core.camera.Camera;
-import com.wawacorp.wawagl.core.manager.EntityManager;
+import com.wawacorp.wawagl.core.model.entity.EntityManager;
 import com.wawacorp.wawagl.core.scene.Scene;
 import com.wawacorp.wawagl.core.view.View;
-import com.wawacorp.wawagl.core.view.hud.nanovg.Font;
+import com.wawacorp.wawagl.core.view.gui.nanovg.Font;
 import com.wawacorp.wawagl.core.manager.AssetManager;
 import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.objects.OutlinedObject;
@@ -162,7 +161,7 @@ public class Game {
 //                throw new RuntimeException(e);
 //            }
 //            elapsedTime = System.currentTimeMillis();
-//            EntityManager.onLoop();
+            EntityManager.onLoop();
 //            Animation.runAll();
 
             Camera.ACTIVE.bind();

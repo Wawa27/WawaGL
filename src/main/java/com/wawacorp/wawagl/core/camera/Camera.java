@@ -1,17 +1,15 @@
 package com.wawacorp.wawagl.core.camera;
 
 import com.wawacorp.wawagl.core.camera.projection.Projection;
-import com.wawacorp.wawagl.core.buffer.ubo.CameraUBO;
-import com.wawacorp.wawagl.core.model.entity.Entity;
+import com.wawacorp.wawagl.core.view.buffer.ubo.CameraUBO;
 import com.wawacorp.wawagl.core.view.Bindable;
-import com.wawacorp.wawagl.core.view.Movable;
 import org.joml.Matrix4f;
 
-public abstract class Camera extends Entity implements Bindable {
+public abstract class Camera implements Bindable {
     public static Camera ACTIVE;
 
     static {
-        ACTIVE = SimpleCamera.DEFAULT_ORTHOGRAPHIC;
+        ACTIVE = FPSCamera.DEFAULT;
     }
 
     private CameraUBO ubo;
@@ -21,6 +19,11 @@ public abstract class Camera extends Entity implements Bindable {
 
     private final Matrix4f viewProjectionMatrix;
 
+    /**
+     * Creates a new Camera
+     * Must call {#link update(#a, #a)} method to upload it to the shader
+     * @param projection
+     */
     public Camera(Projection projection) {
         this.projection = projection;
         viewProjectionMatrix = new Matrix4f();
@@ -28,22 +31,6 @@ public abstract class Camera extends Entity implements Bindable {
 
         ubo = new CameraUBO(this);
     }
-
-    public abstract void forward();
-
-    public abstract void backward();
-
-    public abstract void left();
-
-    public abstract void right();
-
-    public abstract void up();
-
-    public abstract void down();
-
-    public abstract void mouse(float x, float y);
-
-    public abstract void setPosition(float x, float y, float z);
 
     @Override
     public void bind() {

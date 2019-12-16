@@ -1,6 +1,5 @@
 package com.wawacorp.wawagl.core.model.entity;
 
-import com.wawacorp.wawagl.core.manager.EntityManager;
 import com.wawacorp.wawagl.core.view.Movable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -20,16 +19,21 @@ public class Entity extends Observable implements Movable {
     }
 
     public Entity(Vector3f position) {
+        this(position, new Vector3f(1, 1, 1));
+    }
+
+    public Entity(Vector3f position, Vector3f scale) {
         EntityManager.addEntity(this);
         this.position = position;
         rotation = new Vector3f();
-        scale = new Vector3f(1, 1, 1);
+        this.scale = scale;
         model = new float[16];
         modelMatrix = new Matrix4f();
         update();
     }
 
     public void translate(float x, float y, float z) {
+        System.out.println(getPosition());
         position.add(x, y, z);
         update();
     }
@@ -75,7 +79,7 @@ public class Entity extends Observable implements Movable {
     }
 
     public float[] getModel() {
-        return modelMatrix.identity().translate(position).rotateX(rotation.x).rotateY(rotation.y).rotateZ(rotation.z).scale(scale).get(model);
+        return modelMatrix.identity().translate(position).scale(scale).rotateXYZ(rotation).get(model);
     }
 
     public void update() {

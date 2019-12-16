@@ -21,7 +21,7 @@ public abstract class Animation {
     protected long start;
 
     /**
-     * Duration of the animation in NANOSECONDS
+     * Duration of the animation in MILLI
      */
     protected long duration;
 
@@ -34,11 +34,20 @@ public abstract class Animation {
 
     /**
      * Creates an Animation
+     * @param duration The time of the animation in Milliseconds
+     */
+    public Animation(long duration) {
+        this.duration = duration;
+        this.start = -1;
+    }
+
+    /**
+     * Creates an Animation
      * @param duration The time of the animation
      * @param timeUnit The time unit of the animation
      */
     public Animation(long duration, TimeUnit timeUnit) {
-        this.duration = timeUnit.toNanos(duration);
+        this.duration = timeUnit.toMillis(duration);
         this.start = -1;
     }
 
@@ -47,10 +56,10 @@ public abstract class Animation {
      * Removes all the animations that finished.
      * This methods should be called once (and only once) per frame (not necessarily on the main thread)
      */
-    public static void runAll() {
+    public static void loop() {
         for (int i = activeAnimations.size() - 1; i >= 0; i--) {
             Animation animation = activeAnimations.get(i);
-            if (System.nanoTime() < animation.start + animation.duration) { // active
+            if (System.currentTimeMillis() < animation.start + animation.duration) { // active
                 animation.onLoop();
             } else { // No longer active
                 activeAnimations.remove(animation);
@@ -65,7 +74,7 @@ public abstract class Animation {
      */
     public final void start() {
         if (start != -1) return;
-        start = System.nanoTime();
+        start = System.currentTimeMillis();
         activeAnimations.add(this);
         onStart();
     }
@@ -106,10 +115,9 @@ public abstract class Animation {
      */
     public final void end() {
         start = -1;
+        onEnd();
         if (animationEndListener != null) {
             animationEndListener.onAnimationEnd();
-        } else {
-            start();
         }
     }
 
@@ -123,6 +131,15 @@ public abstract class Animation {
 
     public final void setAnimationEndListener(AnimationEndListener listener) {
         this.animationEndListener = listener;
+    }
+
+    /**
+     * Time passed since start of the animation
+     * @return Time passed in Millieconds from the start
+     */
+    protected final float timePassed() {
+        if (!isPlaying()) return -1;
+        return System.currentTimeMillis() - start;
     }
 
     protected abstract void onStart();

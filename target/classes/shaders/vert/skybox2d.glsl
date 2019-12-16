@@ -17,5 +17,5 @@ uniform vec2 offset;
 
 void main() {
     aTexCoord = offset + texCoord;
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    gl_Position = model * vec4(position, 1.0);
 }

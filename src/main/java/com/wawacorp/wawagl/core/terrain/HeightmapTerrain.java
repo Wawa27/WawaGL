@@ -6,11 +6,15 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class HeightmapTerrain extends Terrain {
+    private final int width;
+    private final int height;
 
     public HeightmapTerrain(Bitmap image) {
         super(image.getWidth(), image.getHeight());
         ByteBuffer buffer = image.getData();
 
+        this.width = image.getWidth();
+        this.height = image.getHeight();
         this.name = "Heightmap";
 
         vertices = new float[image.getWidth() * image.getHeight() * 3];
@@ -24,7 +28,7 @@ public class HeightmapTerrain extends Terrain {
                 buffer.get(); // Skip the alpha value
 
                 int vertexOffset = i * image.getWidth() * 3 + j * 3;
-                float height = rgb/755f * 128;
+                float height = rgb/755f * 16;
 
                 vertices[vertexOffset] = j;
                 vertices[vertexOffset + 1] = height;
@@ -52,5 +56,13 @@ public class HeightmapTerrain extends Terrain {
                 indices[i * (image.getWidth() - 1) * 6 + j * 6 + 5] =(i + 1) * image.getWidth() + (j + 1);
             }
         }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

@@ -2,11 +2,10 @@ package com.wawacorp.wawagl.core.terrain;
 
 import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.model.Mesh;
-import com.wawacorp.wawagl.core.view.single.GLSingleMesh;
 
 import java.util.ArrayList;
 
-public class Terrain extends Mesh {
+public abstract class Terrain extends Mesh {
     protected final float[][] heights;
     protected final ArrayList<Entity> entities;
 
@@ -26,12 +25,10 @@ public class Terrain extends Mesh {
 
     public void update() {
         for (Entity entity : entities) {
-            System.out.println("entity:" + entity.getPosition());
             float terrainHeightAtPlayerPosition = getHeight((int) entity.getPosition().x, (int) entity.getPosition().z);
-            System.out.println("height:" + terrainHeightAtPlayerPosition);
             if (terrainHeightAtPlayerPosition != Float.NEGATIVE_INFINITY) {
                 if (terrainHeightAtPlayerPosition > entity.getPosition().y) {
-                    entity.getPosition().set(1, terrainHeightAtPlayerPosition);
+                    entity.getPosition().set(1, terrainHeightAtPlayerPosition + .1f);
                 }
             }
          }

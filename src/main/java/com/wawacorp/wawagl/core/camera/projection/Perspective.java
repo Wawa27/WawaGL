@@ -13,6 +13,5 @@ public class Perspective extends Projection {
 
     public Perspective(float fovy, float aspect, float zNear, float zFar) {
         super(new Matrix4f().setPerspective(fovy, aspect, zNear, zFar));
-        System.out.println(getProjectionMatrix());
     }
 }

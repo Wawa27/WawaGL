@@ -76,7 +76,7 @@ You do not have the right to convert this skybox to a lossy type like jpg. Sorry
 
 This tilePhysic was suggested by somebody on the forum at the Wadfather. He noticed that there was no forest skyboxes.
 There is a reason for that in that making a entire forest is really difficult. Trees are huge poly pigs and having
-hundreds of them in a scene and then rendering it is almost impossible. So I sugessted Mr. Gib give it a try to render !
+hundreds of them in a AScene and then rendering it is almost impossible. So I sugessted Mr. Gib give it a try to render !
 Ha Ha, Well he seeing that comming countered with a challenge that we both should try to make one and the best sky wins
 sort of. Well I couldn't put in the time so I declined at first. So Mr. Gib extended the deadline by a month. Low and 
 behold I found the time and had it done by the original first date but Mr. Gib's skybox was no were to be seen.

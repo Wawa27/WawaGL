@@ -1,6 +1,6 @@
 #version 450
 
-const int MAX_INSTANCE_COUNT = 256;
+const int MAX_INSTANCE_COUNT = 512;
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;

@@ -1,6 +1,6 @@
 package com.wawacorp.wawagl.core.view.lighting;
 
-import com.wawacorp.wawagl.core.buffer.ubo.LightSceneUBO;
+import com.wawacorp.wawagl.core.view.buffer.ubo.LightSceneUBO;
 
 import java.util.ArrayList;
 
