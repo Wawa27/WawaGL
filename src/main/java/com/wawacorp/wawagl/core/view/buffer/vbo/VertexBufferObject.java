@@ -33,7 +33,7 @@ public abstract class VertexBufferObject extends BufferObject {
      * Creates a new buffer in the GPU and uploads the data to its location
      * @param data
      */
-    protected void uploadData(float[] data) {
+    public void uploadData(float[] data) {
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(data.length).put(data);
         floatBuffer.flip();
         glBufferData(target, floatBuffer, GL_STREAM_DRAW);
@@ -43,7 +43,7 @@ public abstract class VertexBufferObject extends BufferObject {
      * Updates the buffer with the given data
      * @param data
      */
-    protected void updateData(float[] data) {
+    public void updateData(float[] data) {
         glBufferSubData(target, 0, data);
     }
 
@@ -51,7 +51,7 @@ public abstract class VertexBufferObject extends BufferObject {
      * Creates a new buffer in the GPU and uploads the data to its location
      * @param data
      */
-    protected void uploadData(int[] data) {
+    public void uploadData(int[] data) {
         IntBuffer floatBuffer = BufferUtils.createIntBuffer(data.length).put(data);
         floatBuffer.flip();
         glBufferData(target, floatBuffer, GL_STATIC_DRAW);

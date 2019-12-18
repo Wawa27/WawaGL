@@ -22,6 +22,7 @@ public class Shader {
 
     public final static String VERTEX_PATH = "shaders/vertex/";
     public final static String FRAGMENT_PATH = "shaders/fragment/";
+    public final static String GEOMETRY_PATH = "shaders/geometry/";
 
     private HashMap<String, Integer> locations;
 
@@ -55,6 +56,34 @@ public class Shader {
         return null;
     }
 
+    public static Shader loadShader(String vertexPath, String fragmentPath, String geometryPath) {
+        int program = glCreateProgram();
+
+        int vertex = loadShader(GL_VERTEX_SHADER, vertexPath);
+        int fragment = loadShader(GL_FRAGMENT_SHADER, fragmentPath);
+        int geometry = loadShader(GL_GEOMETRY_SHADER, geometryPath);
+
+        if (vertex > 0 && fragment > 0 && geometry > 0) {
+            glAttachShader(program, vertex);
+            glAttachShader(program, fragment);
+            glAttachShader(program, geometry);
+
+            glLinkProgram(program);
+            if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+                return null;
+            }
+
+            glValidateProgram(program);
+            if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+                return null;
+            }
+            return new Shader(program);
+        }
+
+        return null;
+    }
+
+    // TODO: delegate to loadShader method
     public static Shader loadShaderRelative(String vertexPath, String fragmentPath) {
         int program = glCreateProgram();
 
@@ -64,6 +93,36 @@ public class Shader {
         if (vertex > 0 && fragment > 0) {
             glAttachShader(program, vertex);
             glAttachShader(program, fragment);
+
+            glLinkProgram(program);
+            if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+                System.err.println(glGetProgramInfoLog(program));
+                return null;
+            }
+
+            glValidateProgram(program);
+            if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+                System.err.println(glGetProgramInfoLog(program));
+                return null;
+            }
+            return new Shader(program);
+        }
+
+        return null;
+    }
+
+    // TODO: delegate to loadShader method
+    public static Shader loadShaderRelative(String vertexPath, String fragmentPath, String geometryPath) {
+        int program = glCreateProgram();
+
+        int vertex = loadShader(GL_VERTEX_SHADER, VERTEX_PATH + vertexPath + ".glsl");
+        int fragment = loadShader(GL_FRAGMENT_SHADER, FRAGMENT_PATH + fragmentPath + ".glsl");
+        int geometry = loadShader(GL_GEOMETRY_SHADER, GEOMETRY_PATH + geometryPath + ".glsl");
+
+        if (vertex > 0 && fragment > 0 && geometry > 0) {
+            glAttachShader(program, vertex);
+            glAttachShader(program, fragment);
+            glAttachShader(program, geometry);
 
             glLinkProgram(program);
             if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
@@ -319,8 +378,12 @@ public class Shader {
         return loadShaderRelative("single", "single_texture");
     }
 
-    public static Shader getFlatColorShader() {
-        return loadShaderRelative("single", "single_material");
+    public static Shader getColorArrayShader() {
+        return loadShaderRelative("single_colors", "single_colors");
+    }
+
+    public static Shader getColorArrayFlatShader() {
+        return loadShaderRelative("single_colors_flat_shading", "single_colors_flat_shading");
     }
 
     public static Shader getMultipleFlatColorShader() {
@@ -329,5 +392,9 @@ public class Shader {
 
     public static Shader getMaterialShader() {
         return loadShaderRelative("single", "single_material");
+    }
+
+    public static Shader getMaterialFlatShader() {
+        return loadShaderRelative("single_colors_flat_shading", "single_material_flat_shading");
     }
 }

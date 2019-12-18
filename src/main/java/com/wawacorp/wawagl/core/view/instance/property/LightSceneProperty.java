@@ -23,7 +23,5 @@ public class LightSceneProperty extends Property implements Bindable {
     }
 
     @Override
-    public void upload(Shader shader) {
-        
-    }
+    public void upload(Shader shader) { }
 }

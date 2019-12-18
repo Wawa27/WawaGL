@@ -1,10 +1,12 @@
 package com.wawacorp.wawagl.demo.wolf;
 
 import com.wawacorp.wawagl.core.controller.event.KeyboardListener;
+import com.wawacorp.wawagl.core.game.Game;
 import com.wawacorp.wawagl.core.model.Model;
 import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.model.entity.Player;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F10;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class PlayerController extends KeyboardListener {
@@ -21,6 +23,8 @@ public class PlayerController extends KeyboardListener {
         if (key == GLFW_KEY_W) {
             playerEntity.translate(0, 0, 1);
             model.startAnimation();
+        } else if (key == GLFW_KEY_F10) {
+            Game.enableDebugMode();
         }
     }
 

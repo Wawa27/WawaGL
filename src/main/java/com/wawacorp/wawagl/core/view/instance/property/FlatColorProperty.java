@@ -3,6 +3,7 @@ package com.wawacorp.wawagl.core.view.instance.property;
 import com.wawacorp.wawagl.core.model.FlatColor;
 import com.wawacorp.wawagl.core.shader.Shader;
 
+@Deprecated
 public class FlatColorProperty extends Property {
     private final FlatColor color;
 

@@ -10,7 +10,7 @@ import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.utils.FileUtils;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.*;
-import com.wawacorp.wawagl.core.view.single.mesh.GLSingleMesh;
+import com.wawacorp.wawagl.core.view.single.GLSingleView;
 import com.wawacorp.wawagl.demo.wolf.WolfScene;
 import org.joml.Vector3f;
 
@@ -20,11 +20,11 @@ import java.util.ArrayList;
 public class GLModel implements View {
     protected final Model model;
 
-    protected final ArrayList<GLMesh> meshes;
+    protected final ArrayList<GLView> meshes;
     protected final ArrayList<GLModel> models;
     protected final Instance instance;
 
-    public GLModel(Model model, ArrayList<GLMesh> meshes, ArrayList<GLModel> models, Instance instance) {
+    public GLModel(Model model, ArrayList<GLView> meshes, ArrayList<GLModel> models, Instance instance) {
         this.model = model;
         this.meshes = meshes;
         this.models = models;
@@ -32,7 +32,7 @@ public class GLModel implements View {
     }
 
     public void draw() {
-        for (GLMesh mesh : meshes) mesh.draw();
+        for (GLView mesh : meshes) mesh.draw();
         for (GLModel model : models) model.draw();
     }
 
@@ -42,15 +42,20 @@ public class GLModel implements View {
         for (File f : files) {
             fileNames.add(f.getName().split("\\.")[0]);
         }
-        ArrayList<GLMesh> meshes = new ArrayList<>();
+        ArrayList<GLView> meshes = new ArrayList<>();
         for (Mesh mesh : model.getMeshes()) {
-            Instance instance = new Instance(new Entity());
+            Instance instance = new Instance(new Entity() {
+                @Override
+                public void onLoop() {
+
+                }
+            });
             if (fileNames.contains(mesh.getName())) {
                 instance.addProperty(new TextureProperty("texture.ambient", AssetManager.getTexture2D(textureFolderPath + "" + mesh.getName() + "")));
-                meshes.add(new GLSingleMesh(mesh, instance, Shader.getTextureShader()));
+                meshes.add(new GLSingleView(mesh, instance, Shader.getTextureShader()));
             } else {
                 instance.addProperty(new FlatColorProperty("color", FlatColor.DEFAULT));
-                meshes.add(new GLSingleMesh(mesh, new Instance(), Shader.getFlatColorShader()));
+                meshes.add(new GLSingleView(mesh, new Instance(), Shader.getMaterialShader()));
             }
         }
         ArrayList<GLModel> models = new ArrayList<>();
@@ -61,7 +66,7 @@ public class GLModel implements View {
     }
 
     public static GLModel getSingleModel(Model model, Entity rootEntity) {
-        ArrayList<GLMesh> meshes = new ArrayList<>();
+        ArrayList<GLView> meshes = new ArrayList<>();
         for (Mesh mesh : model.getMeshes()) {
             Instance instance = new Instance(
                     // Common properties
@@ -75,25 +80,22 @@ public class GLModel implements View {
             if (mesh.getArmature() != null) {
                 vertexShadex = "single_rigged";
                 instance.addProperty(new ArmatureProperty("armature", mesh.getArmature()));
-                System.out.println("validation:" + mesh.getArmature().validate());
             } else {
                 vertexShadex = "single";
             }
 
-            if (mesh.getTexture() != null) {
+            if (mesh.getMaterialTexture() != null) {
                 fragmentShader = "single_texture";
             } else {
                 fragmentShader = "single_material";
             }
 
-            if (mesh.getTexture() != null && mesh.getTexture().getAmbientPath() != null) {
-                instance.addProperty(new MaterialTextureProperty("texture", new MaterialTextureView(mesh.getTexture())));
-                instance.addProperty(new MaterialProperty("material", mesh.getMaterial()));
-            } else {
-                instance.addProperty(new FlatColorProperty("color", FlatColor.WHITE));
+            if (mesh.getMaterialTexture() != null && mesh.getMaterialTexture().getAmbientPath() != null && mesh.getMaterialTexture().getDiffusePath() != null
+            && mesh.getMaterialTexture().getSpecularPath() != null) {
+                instance.addProperty(new MaterialTextureProperty("texture", new MaterialTextureView(mesh.getMaterialTexture())));
             }
             Shader shader = Shader.loadShaderRelative(vertexShadex, fragmentShader);
-            meshes.add(new GLSingleMesh(mesh, instance, shader));
+            meshes.add(new GLSingleView(mesh, instance, shader));
         }
         ArrayList<GLModel> models = new ArrayList<>();
         for (Model m : model.getModels()) {

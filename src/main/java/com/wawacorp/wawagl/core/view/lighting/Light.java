@@ -1,29 +1,35 @@
 package com.wawacorp.wawagl.core.view.lighting;
 
-import com.wawacorp.wawagl.core.model.FlatColor;
+import com.wawacorp.wawagl.core.model.Material;
 import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.model.Mesh;
 import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
-import com.wawacorp.wawagl.core.view.instance.property.FlatColorProperty;
-import com.wawacorp.wawagl.core.view.single.mesh.GLSingleMesh;
+import com.wawacorp.wawagl.core.view.instance.property.MaterialProperty;
+import com.wawacorp.wawagl.core.view.single.GLSingleView;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Light {
     private Vector3f color;
-    private GLSingleMesh mesh;
+    private GLSingleView mesh;
     protected final Instance instance;
     protected final Entity entity;
 
     //TODO: Lights meshes should have the colors of the lights in the shader
-    @Deprecated
-    public Light(Mesh mesh, Vector3f position, Vector3f color) {
-        this.entity = new Entity();
-        entity.translate(position.x, position.y, position.z);
-        this.instance = new Instance(new FlatColorProperty(new FlatColor()), new EntityProperty(entity));
-        this.mesh = mesh == null ? null : new GLSingleMesh(mesh, instance);
+    public Light(Mesh mesh, Entity entity, Vector3f color) {
         this.color = color;
+        this.entity = entity;
+        this.instance = new Instance(
+                new EntityProperty(entity),
+                new MaterialProperty("material", new Material(
+                "light",
+                new Vector4f(1, 0, 0, 1),
+                new Vector4f(1, 0, 0, 1),
+                new Vector4f(1, 0, 0, 1)
+        )));
+        this.mesh = mesh == null ? null : new GLSingleView(mesh, instance, Shader.getMaterialShader());
     }
 
     public Vector3f getColor() {

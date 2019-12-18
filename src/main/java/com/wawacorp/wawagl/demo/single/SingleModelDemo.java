@@ -18,7 +18,12 @@ public class SingleModelDemo extends Scene {
 
     public SingleModelDemo() {
         Model model = AssimpLoader.loadScene("models/new_char/new_char.fbx").getRoot();
-        this.model = GLModel.getSingleModel(model, new Entity());
+        this.model = GLModel.getSingleModel(model, new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        });
 //        model.getSkeletalAnimation()[0].setAnimationEndListener(model.getSkeletalAnimation()[0]::start);
 //        model.getSkeletalAnimation()[0].start();
     }

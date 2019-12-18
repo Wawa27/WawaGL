@@ -64,9 +64,9 @@ uniform Texture materialTexture;
 
 void main() {
     // ambient
-    float ambientStrength = .25;
+    float ambientStrength = .3;
     float diffuseStrength = .6;
-    float specularStrength = .15;
+    float specularStrength = .1;
 
     vec3 ambient = ambientStrength * material.diffuse * texture(materialTexture.ambient, oTexCoord).xyz;
     vec3 objectPosition = normalize(oPosition);

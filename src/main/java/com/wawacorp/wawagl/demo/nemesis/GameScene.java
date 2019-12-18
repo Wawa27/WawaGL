@@ -24,7 +24,12 @@ public class GameScene extends Scene {
         playerView = GLModel.getSingleModel(
                 AssimpLoader.loadScene(
                         "models/character/character.obj"
-                ).getRoot(), new Entity()
+                ).getRoot(), new Entity() {
+                    @Override
+                    public void onLoop() {
+
+                    }
+                }
         ); // View of player entity
         chunks = new ArrayList<>();
         for (int i = -8; i < 8; i++) {

@@ -5,11 +5,11 @@ import com.wawacorp.wawagl.core.game.Game;
 import com.wawacorp.wawagl.core.scene.Scene;
 import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.view.instance.Instance;
-import com.wawacorp.wawagl.core.view.multiple.mesh.GLMultipleMesh;
+import com.wawacorp.wawagl.core.view.multiple.mesh.GLMultipleView;
 import org.joml.Vector4f;
 
 public class MultipleMeshDemo extends Scene {
-    private final GLMultipleMesh CUBE = new GLMultipleMesh(
+    private final GLMultipleView CUBE = new GLMultipleView(
             new Cube(), Shader.loadShaderRelative("multiple", "multiple_flat_color"), new Instance[16]
     );
 

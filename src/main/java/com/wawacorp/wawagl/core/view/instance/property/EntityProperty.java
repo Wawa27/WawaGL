@@ -10,11 +10,21 @@ public class EntityProperty extends Property implements Observer {
     private final Entity entity;
 
     public EntityProperty() {
-        this("model", new Entity());
+        this("model", new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        });
     }
 
     public EntityProperty(String name) {
-        this(name, new Entity());
+        this(name, new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        });
 
     }
 
@@ -31,7 +41,7 @@ public class EntityProperty extends Property implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         setChanged();
-        notifyObservers();
+        notifyObservers(o);
     }
 
     public Entity getEntity() {

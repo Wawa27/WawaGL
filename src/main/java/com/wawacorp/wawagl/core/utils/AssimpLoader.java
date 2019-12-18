@@ -96,7 +96,7 @@ public class AssimpLoader {
             return null;
         }
 
-        AScene AScene = new AScene(aiScene.mNumAnimations(), toMatrix4f(root.mTransformation()));
+        AScene AScene = new AScene(aiScene.mNumAnimations(), toMatrix4f(root.mTransformation()).invert());
         getAllMaterials(texturePath, aiScene, AScene);
         AScene.setRoot(toModel(aiScene, AScene, root));
 
@@ -126,7 +126,7 @@ public class AssimpLoader {
                 for (int j = 0; j < aiScene.mNumMaterials(); j++) {
                     AIMaterial aiMaterial = AIMaterial.create(buffer.get(j));
                     Material material = toMaterial(aiMaterial);
-                    AScene.setTexture(getTexture(meshPath, aiMaterial));
+                    AScene.setMaterialTexture(i, toMaterialTexture(meshPath, aiMaterial));
                     AScene.addMaterial(i++, material);
                 }
             } else throw new RuntimeException("Material not found for scene: ");
@@ -202,6 +202,7 @@ public class AssimpLoader {
 
         Mesh mesh = new Mesh(aiMesh.mName().dataString(), vertices, normals, texCoords, indices, armature);
         mesh.setMaterial(AScene.getMaterial(aiMesh.mMaterialIndex()));
+        mesh.setMaterialTexture(AScene.getMaterialTexture(aiMesh.mMaterialIndex()));
         return mesh;
     }
 

@@ -34,6 +34,8 @@ public class TPSCamera extends Camera implements Observer {
 
     protected int height;
 
+    protected boolean floatAround;
+
     public TPSCamera(Projection projection, Entity player, float distance, float angleZ, float angleY) {
         this(projection, player, distance, angleZ, angleY, 2);
     }
@@ -65,7 +67,7 @@ public class TPSCamera extends Camera implements Observer {
                 ),
                 up
         );
-        update();
+        updateView();
     }
 
     public float calculateHorizontalOffset() {
@@ -119,5 +121,17 @@ public class TPSCamera extends Camera implements Observer {
 
     public float getDistance() {
         return distance;
+    }
+
+    @Override
+    public void onLoop() {
+        if (floatAround) {
+            angleY += .01f;
+            update(null, null);
+        }
+    }
+
+    public void setFloatAround(boolean floatAround) {
+        this.floatAround = floatAround;
     }
 }

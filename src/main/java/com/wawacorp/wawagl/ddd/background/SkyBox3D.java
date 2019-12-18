@@ -8,9 +8,9 @@ import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
 import com.wawacorp.wawagl.core.view.instance.property.TextureProperty;
-import com.wawacorp.wawagl.core.view.single.mesh.GLSingleMesh;
+import com.wawacorp.wawagl.core.view.single.GLSingleView;
 
-public class SkyBox3D extends GLSingleMesh {
+public class SkyBox3D extends GLSingleView {
     private final static Mesh cube;
     private final Entity entity;
 
@@ -24,7 +24,12 @@ public class SkyBox3D extends GLSingleMesh {
                         new TextureProperty("texture0", AssetManager.getTextureArray(paths))
                 ),
                 Shader.loadShaderRelative("skybox3d", "skybox3d"));
-        this.entity = new Entity();
+        this.entity = new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        };
         this.entity.scale(8, 8, 8);
         this.instance.addProperty(new EntityProperty("model", entity));
     }

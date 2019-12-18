@@ -9,21 +9,26 @@ import com.wawacorp.wawagl.core.scene.Scene;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
 import com.wawacorp.wawagl.core.view.instance.property.TextureProperty;
-import com.wawacorp.wawagl.core.view.single.mesh.GLSingleMesh;
+import com.wawacorp.wawagl.core.view.single.GLSingleView;
 
 public class SplashScreen extends Scene {
-    private final GLSingleMesh textureMesh;
+    private final GLSingleView textureMesh;
 
     static {
 
     }
 
     public SplashScreen() {
-        textureMesh = new GLSingleMesh(
+        textureMesh = new GLSingleView(
                 new Rectangle(Game.width, Game.height),
                 new Instance()
         );
-        textureMesh.getInstance().addProperty(new EntityProperty("model", new Entity()));
+        textureMesh.getInstance().addProperty(new EntityProperty("model", new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        }));
         textureMesh.getInstance().addProperty(new TextureProperty("texture.ambient", Texture2D.DEFAULT));
     }
 

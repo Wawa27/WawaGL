@@ -1,8 +1,6 @@
 package com.wawacorp.wawagl.core.camera;
 
-import com.wawacorp.wawagl.core.camera.projection.Orthographic;
 import com.wawacorp.wawagl.core.camera.projection.Perspective;
-import com.wawacorp.wawagl.core.terrain.Terrain;
 import com.wawacorp.wawagl.core.camera.projection.Projection;
 import org.joml.Vector3f;
 
@@ -26,14 +24,14 @@ public class FPSCamera extends Camera {
         eye = new Vector3f(0, 0, 0);
         center = new Vector3f(eye.add(getDirection(), new Vector3f()));
         up = new Vector3f(0, 1, 0);
-        update();
+        updateView();
     }
 
     public void mouse(float x, float y) {
         angleX += x;
         angleY += y;
         center.set(getDirection());
-        update();
+        updateView();
     }
 
     public Vector3f getRight() {
@@ -47,40 +45,40 @@ public class FPSCamera extends Camera {
     public void forward() {
         Vector3f direction = getDirection();
         eye.add(direction);
-        update();
+        updateView();
     }
 
     public void backward() {
         Vector3f direction = getDirection();
         eye.add(direction);
-        update();
+        updateView();
     }
 
     public void left() {
         Vector3f direction = getRight();
         eye.sub(direction);
-        update();
+        updateView();
     }
 
     public void right() {
         Vector3f direction = getRight();
         eye.add(direction);
-        update();
+        updateView();
     }
 
     public void up() {
         eye.add(up);
-        update();
+        updateView();
     }
 
     public void down() {
         eye.sub(up);
-        update();
+        updateView();
     }
 
     public void setPosition(float x, float y, float z) {
         eye.set(x, y, z);
-        update();
+        updateView();
     }
 
     public Vector3f getDirection() {
@@ -92,12 +90,17 @@ public class FPSCamera extends Camera {
     }
 
     @Override
-    public void update() {
+    public void updateView() {
         viewMatrix.setLookAt(
                 eye.add(new Vector3f(0, 0, 8)),
                 center.add(eye, new Vector3f()),
                 up
         );
-        super.update();
+        super.updateView();
+    }
+
+    @Override
+    public void onLoop() {
+
     }
 }

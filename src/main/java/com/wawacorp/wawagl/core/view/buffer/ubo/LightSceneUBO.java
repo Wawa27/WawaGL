@@ -90,22 +90,26 @@ public class LightSceneUBO extends BufferObject {
 
         glBindBuffer(TARGET, handle);
 
-        Vector4f position = new Vector4f(lightScene.getPointLights().get(lightOffset).getEntity().getPosition(), 1.0f);
-        position.mul(Camera.ACTIVE.getNormalMatrix(lightScene.getPointLights().get(lightOffset).getEntity().getModelMatrix()));
+        Vector4f position = Camera.ACTIVE.getPositionViewSpace(
+                new Vector4f(lightScene.getPointLights().get(lightOffset).getEntity().getPosition(), 1.0f)
+        );
         glBufferSubData(TARGET, offset, new float[]{position.x, position.y, position.z});
 
         Vector3f color = lightScene.getPointLights().get(lightOffset).getColor();
         glBufferSubData(TARGET, offset + 16, new float[]{color.x, color.y, color.z});
 
         glBindBuffer(TARGET, 0);
+
+        updateLightCount();
     }
 
     public void updateDirectionalLight(int lightOffset) {
         int offset = ACTIVE_LIGHT_COUNT_SIZE + LightScene.MAX_LIGHTS * POINT_LIGHT_SIZE + lightOffset * DIRECTIONAL_LIGHT_SIZE;
         glBindBuffer(TARGET, handle);
 
-        Vector4f direction = new Vector4f(lightScene.getDirectionalLights().get(lightOffset).getDirection());
-        direction.mul(Camera.ACTIVE.getNormalMatrix(lightScene.getDirectionalLights().get(lightOffset).getEntity().getModelMatrix()));
+        Vector4f direction = Camera.ACTIVE.getVectorViewSpace(
+                new Vector4f(lightScene.getDirectionalLights().get(lightOffset).getDirection())
+        );
         //TODO: cache the float buffer instead of creating a new one
         glBufferSubData(TARGET, offset, new float[]{direction.x, direction.y, direction.z});
 

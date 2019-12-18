@@ -13,7 +13,7 @@ public class ArmatureProperty extends Property implements Observer {
     public ArmatureProperty(String name, Armature armature) {
         super(name);
         this.armature = armature;
-        this.armature.addObserver(this::update);
+        this.armature.addObserver(this);
     }
 
     @Override

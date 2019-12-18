@@ -75,4 +75,9 @@ public class SphericalCamera extends Camera implements Observer {
         eye.y = (float) (radius * sin(0) * sin(azimuth));
         eye.z = (float) (radius * cos(0));
     }
+
+    @Override
+    public void onLoop() {
+
+    }
 }

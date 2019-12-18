@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 
 import java.util.Observable;
 
-public class Entity extends Observable implements Movable {
+public abstract class Entity extends Observable implements Movable {
     protected final Vector3f position;
     protected final Vector3f rotation;
     protected final Vector3f scale;
@@ -87,9 +87,7 @@ public class Entity extends Observable implements Movable {
         notifyObservers();
     }
 
-    public void onLoop() {
-
-    }
+    public abstract void onLoop();
 
     public Matrix4f getModelMatrix() {
         return modelMatrix;

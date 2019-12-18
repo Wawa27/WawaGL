@@ -41,7 +41,7 @@ public class Instance extends Observable implements Observer, Bindable {
     @Override
     public void update(Observable observable, Object o) {
         setChanged();
-        notifyObservers();
+        notifyObservers(o);
     }
 
     public void upload(Shader shader) {

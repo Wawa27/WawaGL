@@ -33,4 +33,9 @@ public class AttachedEntity extends Entity implements Observer {
     public float[] getModel() {
         return modelMatrix.identity().translate(parent.getPosition()).translate(distance).rotateXYZ(parent.rotation).scale(parent.scale).get(model);
     }
+
+    @Override
+    public void onLoop() {
+
+    }
 }

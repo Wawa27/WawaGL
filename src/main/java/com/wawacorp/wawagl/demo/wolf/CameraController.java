@@ -6,6 +6,9 @@ import com.wawacorp.wawagl.core.controller.event.KeyboardListener;
 import com.wawacorp.wawagl.core.controller.event.ScrollListener;
 import com.wawacorp.wawagl.core.game.Game;
 
+import java.awt.image.Kernel;
+import java.security.Key;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class CameraController extends CursorListener {
@@ -14,6 +17,7 @@ public class CameraController extends CursorListener {
     public CameraController(TPSCamera camera) {
         this.camera = camera;
         new ScrollListener();
+        new KeyboardListener();
     }
 
     @Override
@@ -27,7 +31,26 @@ public class CameraController extends CursorListener {
     private final class ScrollListener extends com.wawacorp.wawagl.core.controller.event.ScrollListener {
         @Override
         public void onScroll(double xoffset, double yoffset) {
-            camera.setDistance(camera.getDistance() + (float) yoffset);
+            camera.setDistance(camera.getDistance() + (float) yoffset * 32);
+        }
+    }
+
+    private final class KeyboardListener extends com.wawacorp.wawagl.core.controller.event.KeyboardListener {
+        @Override
+        public void onKeyPressed(int key) {
+            if (key == GLFW_KEY_F8) {
+                camera.setFloatAround(true);
+            }
+        }
+
+        @Override
+        public void onKeyReleased(int key) {
+
+        }
+
+        @Override
+        public void onKeyRepeated(int key) {
+
         }
     }
 }

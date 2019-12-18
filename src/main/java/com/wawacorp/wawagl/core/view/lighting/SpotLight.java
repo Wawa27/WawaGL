@@ -1,16 +1,18 @@
 package com.wawacorp.wawagl.core.view.lighting;
 
 import com.wawacorp.wawagl.core.model.Mesh;
+import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.shader.ShaderException;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class SpotLight extends Light {
     private Vector3f direction;
     private Vector3f color;
     private float cutoff;
 
-    public SpotLight(Mesh mesh, Vector3f position, Vector3f color, Vector3f direction, float cutoff) throws ShaderException {
-        super(mesh, position, color);
+    public SpotLight(Mesh mesh, Entity entity, Vector3f color, Vector3f direction, float cutoff) throws ShaderException {
+        super(mesh, entity, color);
         this.direction = direction;
         this.color = color;
         this.cutoff = cutoff;

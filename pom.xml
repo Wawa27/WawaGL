@@ -238,7 +238,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.wawacorp.wawagl.demo.animation.AnimationDemo
+                                        com.wawacorp.wawagl.demo.wolf.WolfDemo
                                     </mainClass>
                                 </manifest>
                             </archive>

@@ -27,7 +27,12 @@ public class GameScene extends Scene {
         model.getMesh("Cylinder").setMaterial(
                 new Material()
         );
-        playerView = GLModel.getSingleModel(model, new Entity());
+        playerView = GLModel.getSingleModel(model, new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        });
         player.scale(128, 128, 128);
         new DefaultKeyboardController();
     }

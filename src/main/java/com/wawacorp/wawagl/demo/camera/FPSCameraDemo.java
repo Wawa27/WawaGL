@@ -16,34 +16,44 @@ import com.wawacorp.wawagl.core.view.GLModel;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
 import com.wawacorp.wawagl.core.view.instance.property.FlatColorProperty;
-import com.wawacorp.wawagl.core.view.single.mesh.GLSingleMesh;
+import com.wawacorp.wawagl.core.view.single.GLSingleView;
 import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class FPSCameraDemo extends Scene {
     private final Player player;
-    private final GLSingleMesh cube;
+    private final GLSingleView cube;
     private final GLModel playerView;
     private final TPSCamera camera;
     private float cameraAngleZ;
     private float cameraAngleY;
     private float distance = 4;
-    private final GLSingleMesh floor;
+    private final GLSingleView floor;
 
     public FPSCameraDemo() {
-        cube = new GLSingleMesh(new Cube(), new Instance(
+        cube = new GLSingleView(new Cube(), new Instance(
                 new EntityProperty(),
                 new FlatColorProperty("color", FlatColor.DEFAULT)
         ));
         player = new Player();
         player.translate(0, 0, 8);
 //        player.rotate(0, (float) Math.PI, 0);
-        playerView = GLModel.getSingleModel(AssimpLoader.loadScene("models/character/character.obj").getRoot(), new Entity());
+        playerView = GLModel.getSingleModel(AssimpLoader.loadScene("models/character/character.obj").getRoot(), new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        });
         cameraAngleZ = 0;
         camera = new TPSCamera(Perspective.DEFAULT, player, 8, (float) Math.PI/4, 0);
-        Entity floorEntity = new Entity();
-        floor = new GLSingleMesh(new Cube(), new Instance(
+        Entity floorEntity = new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        };
+        floor = new GLSingleView(new Cube(), new Instance(
                 new FlatColorProperty("color", FlatColor.WHITE),
                 new EntityProperty("model", floorEntity)
         ));

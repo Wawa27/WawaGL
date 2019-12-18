@@ -31,6 +31,7 @@ public class Bitmap {
         if (relativePath == null) return null;
         InputStream stream = Bitmap.class.getClassLoader().getResourceAsStream(relativePath);
         String[] ext = relativePath.split("\\.");
+        System.out.println(relativePath);
         return loadJPEG(stream);
     }
 

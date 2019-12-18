@@ -1,7 +1,7 @@
 package com.wawacorp.wawagl.core.view.lighting;
 
 import com.wawacorp.wawagl.core.model.Mesh;
-import com.wawacorp.wawagl.core.view.Environnement;
+import com.wawacorp.wawagl.core.model.entity.Entity;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -9,8 +9,8 @@ public class DirectionalLight extends Light {
     private Vector4f direction;
     private Vector3f color;
 
-    public DirectionalLight(Mesh mesh, Vector3f position, Vector4f direction, Vector3f color) {
-        super(mesh, position, color);
+    public DirectionalLight(Mesh mesh, Entity entity, Vector3f color, Vector4f direction) {
+        super(mesh, entity, color);
         this.direction = direction.negate();
         this.color = color;
     }
@@ -26,7 +26,6 @@ public class DirectionalLight extends Light {
 
     public void setDirection(Vector4f direction) {
         this.direction = direction;
-        Environnement.getLightScene().update();
     }
 
     public Vector3f getColor() {

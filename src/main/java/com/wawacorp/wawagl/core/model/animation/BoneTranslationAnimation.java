@@ -25,7 +25,6 @@ public class BoneTranslationAnimation {
         updateCurrentFrame(ticksPassed);
         if (currentFrame < translation.length - 1) {
             float progress = (float) ((ticksPassed - timesInTicks[currentFrame]) / (timesInTicks[currentFrame + 1] - timesInTicks[currentFrame]));
-            System.out.println(progress + "[currentFrame:" + currentFrame  + "]" + " : " + ticksPassed + ":" + timesInTicks[currentFrame] + " : " + timesInTicks[currentFrame + 1]);
             return translation[currentFrame].lerp(translation[currentFrame + 1], progress, new Vector3f());
         } else {
             return translation[currentFrame];

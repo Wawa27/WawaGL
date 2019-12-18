@@ -1,8 +1,6 @@
 package com.wawacorp.wawagl.core.model;
 
 import com.wawacorp.wawagl.core.model.animation.Armature;
-import com.wawacorp.wawagl.core.model.animation.Bone;
-import com.wawacorp.wawagl.core.model.animation.SkeletalAnimation;
 
 import java.io.Serializable;
 
@@ -18,7 +16,7 @@ public class Mesh implements Serializable {
     private Armature armature;
 
     protected Material material;
-    protected MaterialTexture texture;
+    protected MaterialTexture materialTexture;
 
     public Mesh() {
 
@@ -101,12 +99,12 @@ public class Mesh implements Serializable {
         return colors;
     }
 
-    public void setTexture(MaterialTexture texture) {
-        this.texture = texture;
+    public MaterialTexture getMaterialTexture() {
+        return materialTexture;
     }
 
-    public MaterialTexture getTexture() {
-        return texture;
+    public void setMaterialTexture(MaterialTexture materialTexture) {
+        this.materialTexture = materialTexture;
     }
 
     public void setArmature(Armature armature) {

@@ -4,9 +4,9 @@ import com.wawacorp.wawagl.core.model.shape.Cube;
 import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
-import com.wawacorp.wawagl.core.view.multiple.mesh.GLMultipleMesh;
+import com.wawacorp.wawagl.core.view.multiple.mesh.GLMultipleView;
 
-public class Chunk extends GLMultipleMesh {
+public class Chunk extends GLMultipleView {
     public final static int CHUNK_SIZE = 8;
     public final static int MAX_CUBE_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
     private final Instance[] instances;

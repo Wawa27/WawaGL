@@ -14,6 +14,11 @@ public class SimpleCamera extends Camera {
         update();
     }
 
+    @Override
+    public void onLoop() {
+
+    }
+
     public void translate(float x, float y, float z) {
         viewMatrix.translate(-x, -y, -z);
         update();

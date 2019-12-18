@@ -17,12 +17,15 @@ public class LightScene {
     private final ArrayList<DirectionalLight> directionalLights;
     private final ArrayList<SpotLight> spotLights;
 
+    public static LightScene ACTIVE;
+
     public LightScene() {
         pointLights = new ArrayList<>(MAX_LIGHTS);
         directionalLights = new ArrayList<>(MAX_LIGHTS);
         spotLights = new ArrayList<>(MAX_LIGHTS);
 
         lightSceneUBO = new LightSceneUBO(this);
+        ACTIVE = this;
     }
 
     public ArrayList<PointLight> getPointLights() {

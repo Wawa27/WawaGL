@@ -14,13 +14,14 @@ import java.util.List;
 
 public class AScene {
     private final HashMap<Integer, Material> materials;
+    private final HashMap<Integer, MaterialTexture> materialTextures;
+
     private final SkeletalAnimation[] animations;
     private int currentAnimation = 0;
     private final HashMap<String, Bone> bones;
     private ArrayList<Bone> rootBones;
     private Model root;
     private ArrayList<Camera> cameras;
-    private MaterialTexture texture;
 
     /**
      * Transforms a point from Bone Space to Global space
@@ -30,6 +31,7 @@ public class AScene {
     public AScene(int animationCount, Matrix4f inverseGlobalWorldMatrix) {
         this.inverseGlobalWorldMatrix = inverseGlobalWorldMatrix;
         materials = new HashMap<>();
+        materialTextures = new HashMap<>();
         animations = new SkeletalAnimation[animationCount];
         bones = new HashMap<>();
         this.rootBones = new ArrayList<>();
@@ -41,11 +43,6 @@ public class AScene {
     }
 
     public Model getRoot() {
-        if (texture != null) {
-            for (Mesh mesh : root.getAllMeshes()) {
-                mesh.setTexture(texture);
-            }
-        }
         return root;
     }
 
@@ -53,11 +50,12 @@ public class AScene {
         this.materials.put(index, material);
     }
 
-    public void setTexture(String texture) {
-        this.texture = new MaterialTexture();
-        this.texture.setDiffusePath(texture);
-        this.texture.setAmbientPath(texture);
-        this.texture.setSpecularPath(texture);
+    public void setMaterialTexture(int materialIndex, MaterialTexture texture) {
+        materialTextures.put(materialIndex, texture);
+    }
+
+    public MaterialTexture getMaterialTexture(int materialIndex) {
+        return materialTextures.get(materialIndex);
     }
 
     public void addAnimation(SkeletalAnimation animation) {

@@ -13,16 +13,31 @@ import java.util.ArrayList;
 public class MultipleModelDemo extends Scene {
     private final GLModel CUBE = GLModel.getSingleModel(
             AssimpLoader.loadScene("").getRoot(),
-            new Entity()
+            new Entity() {
+                @Override
+                public void onLoop() {
+
+                }
+            }
     );
     private final Entity entity;
     private final ArrayList<Instance> instances;
 
     public MultipleModelDemo() {
-        entity = new Entity();
+        entity = new Entity() {
+            @Override
+            public void onLoop() {
+
+            }
+        };
         instances = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
-            Entity entity = new Entity();
+            Entity entity = new Entity() {
+                @Override
+                public void onLoop() {
+
+                }
+            };
             entity.translate(i, 0, 0);
             entity.scale(32, 32, 32);
             instances.add(new Instance(entity));

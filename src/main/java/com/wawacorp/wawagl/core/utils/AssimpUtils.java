@@ -3,6 +3,7 @@ package com.wawacorp.wawagl.core.utils;
 import com.wawacorp.wawagl.core.manager.AssetManager;
 import com.wawacorp.wawagl.core.model.AScene;
 import com.wawacorp.wawagl.core.model.Material;
+import com.wawacorp.wawagl.core.model.MaterialTexture;
 import com.wawacorp.wawagl.core.model.animation.Bone;
 import com.wawacorp.wawagl.core.model.animation.BoneAnimation;
 import com.wawacorp.wawagl.core.model.animation.SkeletalAnimation;
@@ -46,15 +47,30 @@ public class AssimpUtils {
         return new Bone(aiBone.mName().dataString(), toMatrix4f(aiBone.mOffsetMatrix()));
     }
 
-    public static String getTexture(String meshPath, AIMaterial aiMaterial) {
-        AIString path = AIString.create();
+    public static MaterialTexture toMaterialTexture(String meshPath, AIMaterial aiMaterial) {
+        MaterialTexture materialTexture = new MaterialTexture();
+        if (aiGetMaterialTextureCount(aiMaterial, aiTextureType_AMBIENT) > 0) {
+            AIString path = AIString.create();
+            if (aiReturn_SUCCESS != aiGetMaterialTexture(aiMaterial, aiTextureType_AMBIENT, 0, path, (IntBuffer) null, null, null, null, null, null)) {
+                System.err.println("Error loading texture");
+            }
+            materialTexture.setAmbientPath(meshPath + "/" + path.dataString());
+        }
         if (aiGetMaterialTextureCount(aiMaterial, aiTextureType_DIFFUSE) > 0) {
+            AIString path = AIString.create();
             if (aiReturn_SUCCESS != aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null)) {
                 System.err.println("Error loading texture");
             }
-            return meshPath + "/" + path.dataString();
+            materialTexture.setDiffusePath(meshPath + "/" + path.dataString());
         }
-        return null;
+        if (aiGetMaterialTextureCount(aiMaterial, aiTextureType_SPECULAR) > 0) {
+            AIString path = AIString.create();
+            if (aiReturn_SUCCESS != aiGetMaterialTexture(aiMaterial, aiTextureType_SPECULAR, 0, path, (IntBuffer) null, null, null, null, null, null)) {
+                System.err.println("Error loading texture");
+            }
+            materialTexture.setDiffusePath(meshPath + "/" + path.dataString());
+        }
+        return materialTexture;
     }
 
     public static Material toMaterial(AIMaterial aiMaterial) {

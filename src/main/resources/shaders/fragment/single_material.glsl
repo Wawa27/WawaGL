@@ -90,7 +90,6 @@ void main() {
         // diffuse
         vec3 lightToObject = normalize(lightScene.pointLights[i].position - oPosition); // vector object -> light
         float lightToObjectAngle = max(dot(objectNormal, lightToObject), 0.0);
-//        vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse;
         vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse;
 
         // specular
@@ -107,6 +106,5 @@ void main() {
 
         res += diffuse;
     }
-    gl_FragColor = vec4(res, 1.0);
-//    gl_FragColor = vec4(material.diffuse, 1);
+    gl_FragColor = vec4(res, 1);
 }

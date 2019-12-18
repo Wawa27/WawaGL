@@ -1,11 +1,14 @@
 package com.wawacorp.wawagl.core.camera;
 
 import com.wawacorp.wawagl.core.camera.projection.Projection;
+import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.view.buffer.ubo.CameraUBO;
 import com.wawacorp.wawagl.core.view.Bindable;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
-public abstract class Camera implements Bindable {
+public abstract class Camera extends Entity implements Bindable {
     public static Camera ACTIVE;
 
     static {
@@ -42,7 +45,7 @@ public abstract class Camera implements Bindable {
         ubo.unbind();
     }
 
-    public void update() {
+    public void updateView() {
         ubo.update();
     }
 
@@ -62,8 +65,22 @@ public abstract class Camera implements Bindable {
         return projection.getProjectionMatrix();
     }
 
-    public Matrix4f getNormalMatrix(Matrix4f model) {
-        return viewMatrix.mul(model, new Matrix4f()).transpose().invert();
+    /**
+     * Returns the vector in view space
+     * @param vector
+     * @return
+     */
+    public Vector4f getPositionViewSpace(Vector4f vector) {
+        return vector.mul(viewMatrix);
+    }
+
+    /**
+     * Returns the vector in view space
+     * @param vector
+     * @return
+     */
+    public Vector4f getVectorViewSpace(Vector4f vector) {
+        return vector.mul(viewMatrix.transpose(new Matrix4f()).invert());
     }
 
     public Matrix4f getViewMatrix() {

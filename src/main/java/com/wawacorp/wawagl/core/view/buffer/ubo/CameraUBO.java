@@ -2,7 +2,7 @@ package com.wawacorp.wawagl.core.view.buffer.ubo;
 
 import com.wawacorp.wawagl.core.view.buffer.BufferObject;
 import com.wawacorp.wawagl.core.camera.Camera;
-import com.wawacorp.wawagl.core.view.Environnement;
+import com.wawacorp.wawagl.core.view.lighting.LightScene;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -46,7 +46,7 @@ public class CameraUBO extends BufferObject {
         glBufferSubData(TARGET, 64, camera.getProjectionMatrix().get(floatBuffer));
         glBindBuffer(TARGET, 0);
 
-        Environnement.getLightScene().update();
+        LightScene.ACTIVE.update();
     }
 
     @Override

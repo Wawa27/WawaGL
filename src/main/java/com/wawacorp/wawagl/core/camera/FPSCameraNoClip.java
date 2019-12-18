@@ -1,7 +1,7 @@
 package com.wawacorp.wawagl.core.camera;
 
 import com.wawacorp.wawagl.core.camera.projection.Projection;
-import com.wawacorp.wawagl.core.terrain.Terrain;
+import com.wawacorp.wawagl.core.model.terrain.Terrain;
 import org.joml.Vector3f;
 
 import static java.lang.Math.cos;
@@ -124,5 +124,10 @@ public class FPSCameraNoClip extends Camera {
                 up
         );
         super.update();
+    }
+
+    @Override
+    public void onLoop() {
+
     }
 }
