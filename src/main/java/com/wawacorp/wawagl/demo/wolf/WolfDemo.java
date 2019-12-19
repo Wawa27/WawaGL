@@ -10,6 +10,7 @@ public class WolfDemo extends Game {
         super(960, 640, "Wolf Demo");
         setScene(new WolfScene());
         setBackgroundColor(new Vector4f(0, 0, 0, 1));
+        enableTransparency();
     }
 
     public static void main(String[] args) {

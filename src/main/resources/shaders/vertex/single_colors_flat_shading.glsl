@@ -79,9 +79,9 @@ void main() {
     gl_Position = projection * view * model * vec4(position, 1.0);
 
     // ambient
-    float ambientStrength = .3;
+    float ambientStrength = .2;
     float diffuseStrength = .6;
-    float specularStrength = .1;
+    float specularStrength = .2;
 
     vec3 ambient = ambientStrength * material.ambient * colors;
     vec3 objectPosition = normalize(positionViewSpace);
@@ -105,9 +105,14 @@ void main() {
     for (int i = 0; i < lightScene.activeDirectionalLights; i++) {
         // diffuse
         float lightToObjectAngle = max(dot(objectNormal, lightScene.directionalLights[i].direction), 0.0);
-        vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse * colors;
+        vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse * colors * lightScene.directionalLights[i].color;
 
-        res += diffuse;
+        // specular
+        vec3 lightReflection = normalize(reflect(-lightScene.directionalLights[i].direction, objectNormal));// reflection of vector object -> light
+        float lightReflectionToEye = pow(max(dot(eye, lightReflection), 0.0), 16);
+        vec3 specular = lightReflectionToEye * specularStrength * material.specular * colors * lightScene.directionalLights[i].color;
+
+        res += (diffuse + specular);
     }
 
     oColor = vec4(res, 1.0);

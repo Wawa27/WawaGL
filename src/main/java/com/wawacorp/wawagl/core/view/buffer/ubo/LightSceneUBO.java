@@ -95,7 +95,7 @@ public class LightSceneUBO extends BufferObject {
         );
         glBufferSubData(TARGET, offset, new float[]{position.x, position.y, position.z});
 
-        Vector3f color = lightScene.getPointLights().get(lightOffset).getColor();
+        Vector4f color = lightScene.getPointLights().get(lightOffset).getColor();
         glBufferSubData(TARGET, offset + 16, new float[]{color.x, color.y, color.z});
 
         glBindBuffer(TARGET, 0);
@@ -109,12 +109,12 @@ public class LightSceneUBO extends BufferObject {
 
         Vector4f direction = Camera.ACTIVE.getVectorViewSpace(
                 new Vector4f(lightScene.getDirectionalLights().get(lightOffset).getDirection())
-        );
+        ).normalize();
         //TODO: cache the float buffer instead of creating a new one
         glBufferSubData(TARGET, offset, new float[]{direction.x, direction.y, direction.z});
 
-        Vector3f color = lightScene.getDirectionalLights().get(lightOffset).getColor();
-        glBufferSubData(TARGET, offset + 16, new float[]{color.x, color.y, color.z});
+        Vector4f color = lightScene.getDirectionalLights().get(lightOffset).getColor();
+        glBufferSubData(TARGET, offset + 16, new float[]{color.x, color.y, color.z, color.w});
 
         glBindBuffer(TARGET, 0);
     }
@@ -131,7 +131,7 @@ public class LightSceneUBO extends BufferObject {
         direction.mul(Camera.ACTIVE.getViewMatrix());
         glBufferSubData(TARGET, offset + 16, new float[]{direction.x, direction.y, direction.z});
 
-        Vector3f color = lightScene.getSpotLights().get(lightOffset).getColor();
+        Vector4f color = lightScene.getSpotLights().get(lightOffset).getColor();
         glBufferSubData(TARGET, offset + 32, new float[]{color.x, color.y, color.z});
 
         float cutoff = lightScene.getSpotLights().get(lightOffset).getCutoff();

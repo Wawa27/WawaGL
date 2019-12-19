@@ -8,13 +8,11 @@ import org.joml.Vector4f;
 
 public class SpotLight extends Light {
     private Vector3f direction;
-    private Vector3f color;
     private float cutoff;
 
-    public SpotLight(Mesh mesh, Entity entity, Vector3f color, Vector3f direction, float cutoff) throws ShaderException {
+    public SpotLight(Mesh mesh, Entity entity, Vector4f color, Vector3f direction, float cutoff) throws ShaderException {
         super(mesh, entity, color);
         this.direction = direction;
-        this.color = color;
         this.cutoff = cutoff;
     }
 
@@ -24,14 +22,6 @@ public class SpotLight extends Light {
 
     public void setDirection(Vector3f direction) {
         this.direction = direction;
-    }
-
-    public Vector3f getColor() {
-        return color;
-    }
-
-    public void setColor(Vector3f color) {
-        this.color = color;
     }
 
     public void setCutoff(float cutoff) {

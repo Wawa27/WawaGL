@@ -15,7 +15,7 @@ public final class EntityManager {
 
     }
 
-    public static void onLoop() {
+    public static void loop() {
         for (Entity entity : entities) entity.onLoop();
     }
 

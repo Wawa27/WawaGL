@@ -7,8 +7,10 @@ import com.wawacorp.wawagl.core.camera.projection.Perspective;
 import com.wawacorp.wawagl.core.game.Game;
 import com.wawacorp.wawagl.core.model.Material;
 import com.wawacorp.wawagl.core.model.entity.Entity;
+import com.wawacorp.wawagl.core.model.entity.EntityManager;
 import com.wawacorp.wawagl.core.model.entity.WaterEntity;
 import com.wawacorp.wawagl.core.model.shape.Cube;
+import com.wawacorp.wawagl.core.model.shape.Rectangle;
 import com.wawacorp.wawagl.core.scene.Scene;
 import com.wawacorp.wawagl.core.shader.Shader;
 import com.wawacorp.wawagl.core.model.terrain.Water;
@@ -48,21 +50,21 @@ public class WolfScene extends Scene {
             AssimpLoader.loadScene("models/new_char/new_char.fbx").getRoot(),
             playerEntity
     );
-    private final Entity terrainEntity = new Entity(new Vector3f(0, -1, 0), new Vector3f(1, 1, 1)) {
+    private final Entity terrainEntity = new Entity(new Vector3f(0, 0, 0), new Vector3f(1, 1, 1)) {
         @Override
         public void onLoop() {
 
         }
     };
     private final GLSingleView terrain = new GLSingleView(
-            new LowPolyHeightmapTerrain(192, 192),
+            new LowPolyHeightmapTerrain(96, 96),
             new Instance(
                     new EntityProperty(terrainEntity),
                     new LightSceneProperty("lightscene", lightScene)
             ), Shader.getColorArrayFlatShader()
     );
 
-    private final Water water = new Water(192 * 4, 192 * 4);
+    private final Water water = new Water(32, 32);
     private final WaterEntity waterEntity = new WaterEntity(water);
     private final GLSingleView waterView = new GLSingleView(
             water,
@@ -70,12 +72,12 @@ public class WolfScene extends Scene {
                     new EntityProperty(waterEntity),
                     new MaterialProperty("material", new Material(
                             "water",
-                            new Vector4f(0, 0, 1f, 1),
-                            new Vector4f(0, 0, 1f, 1),
-                            new Vector4f(0, 0, 1f, 1)
+                            new Vector4f(1, 1, 1f, .6f),
+                            new Vector4f(0, 0, 1f, .6f),
+                            new Vector4f(1, 1, 1f, .6f)
                     )),
                     new LightSceneProperty("lightscene", lightScene)
-            ), Shader.getMaterialShader()
+            ), Shader.getWaterShader()
     );
 
     private final SkyBox3D skyBox3D = new SkyBox3D(
@@ -94,10 +96,9 @@ public class WolfScene extends Scene {
             new Entity(new Vector3f(0, 1024, 0), new Vector3f(64, 64, 64)) {
                 @Override
                 public void onLoop() {
-                    pointLight.getDirection().rotateX(.01f);
                 }
             },
-            new Vector3f(1, 1, 1),
+            new Vector4f(1, 1, 1, 1),
             new Vector4f(0, -1, 0, 1)
     );
 
@@ -108,17 +109,34 @@ public class WolfScene extends Scene {
         }
     });
 
+    private GLSingleView sand = new GLSingleView(new Cube(), new Instance(
+            new EntityProperty("model", new Entity(new Vector3f(0, -6000, 0), new Vector3f(10240, 5120, 10240)) {
+                @Override
+                public void onLoop() {
+
+                }
+            }),
+            new MaterialProperty("material", new Material(
+                    "sand",
+                    new Vector4f(1, 1, 1, 1),
+                    new Vector4f(237 / 255f, 201 / 255f, 175 / 255f, 1),
+                    new Vector4f(1, 1, 1, 1)
+            )),
+            new LightSceneProperty("lightScene", lightScene)
+    ), Shader.getMaterialFlatShader());
+
     private final GLNormalView heightmapNormal = new GLNormalView(
-            terrain
+            waterView
     );
 
     public WolfScene() {
         camera = new TPSCamera(Perspective.DEFAULT, entity, 8, (float) Math.PI / 8, 0, 0);
         Camera.setActive(camera);
+        lightScene.addLight(pointLight);
         new CameraController(camera);
         new PlayerController(model.getModel(), playerEntity);
-        lightScene.addLight(pointLight);
-        waterEntity.scale(64, 1, 64);
+        waterEntity.scale(512, 128, 512);
+        waterEntity.translate(0, -256, 0);
         terrainEntity.scale(64, 64, 64);
     }
 
@@ -126,7 +144,8 @@ public class WolfScene extends Scene {
     public void onLoop() {
         glfwSetCursorPos(Game.window, Game.width / 2f, Game.height / 2f);
         Animation.loop();
-        terrain.draw();
+        EntityManager.loop();
+        sand.draw();
         waterView.draw();
         pointLight.draw();
     }

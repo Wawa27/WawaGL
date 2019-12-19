@@ -6,15 +6,9 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class PointLight extends Light {
-    private Vector3f color;
 
-    public PointLight(Mesh mesh, Entity entity, Vector3f color) {
+    public PointLight(Mesh mesh, Entity entity, Vector4f color) {
         super(mesh, entity, color);
-        this.color = color;
-    }
-
-    public Vector3f getColor() {
-        return color;
     }
 
     @Override

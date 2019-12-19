@@ -7,5 +7,5 @@ in flat vec4 oColor;
 out vec4 gl_FragColor;
 
 void main() {
-    gl_FragColor = oColor;
+    gl_FragColor = vec4(oColor.xyz, 1);
 }

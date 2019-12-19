@@ -126,7 +126,7 @@ public class TPSCamera extends Camera implements Observer {
     @Override
     public void onLoop() {
         if (floatAround) {
-            angleY += .01f;
+            angleY += .0001f;
             update(null, null);
         }
     }

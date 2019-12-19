@@ -173,20 +173,20 @@ public class Shader {
     @Deprecated
     public void uploadMaterial(Material material) {
         int uloc = glGetUniformLocation(program, "material.ambient");
-        glUniform3f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z);
+        glUniform4f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z, material.getAmbient().w);
         uloc = glGetUniformLocation(program, "material.diffuse");
-        glUniform3f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z);
+        glUniform4f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z, material.getDiffuse().w);
         uloc = glGetUniformLocation(program, "material.specular");
-        glUniform3f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z);
+        glUniform4f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z, material.getSpecular().w);
     }
 
     public void uploadMaterial(String name, Material material) {
         int uloc = glGetUniformLocation(program, name + ".ambient");
-        glUniform3f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z);
+        glUniform4f(uloc, material.getAmbient().x, material.getAmbient().y, material.getAmbient().z, material.getAmbient().w);
         uloc = glGetUniformLocation(program, name + ".diffuse");
-        glUniform3f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z);
+        glUniform4f(uloc, material.getDiffuse().x, material.getDiffuse().y, material.getDiffuse().z, material.getDiffuse().w);
         uloc = glGetUniformLocation(program, name + ".specular");
-        glUniform3f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z);
+        glUniform4f(uloc, material.getSpecular().x, material.getSpecular().y, material.getSpecular().z, material.getSpecular().w);
     }
 
     @Deprecated
@@ -383,7 +383,7 @@ public class Shader {
     }
 
     public static Shader getColorArrayFlatShader() {
-        return loadShaderRelative("single_colors_flat_shading", "single_colors_flat_shading");
+        return loadShaderRelative("single_colors_flat_shading", "flat_shading");
     }
 
     public static Shader getMultipleFlatColorShader() {
@@ -395,6 +395,10 @@ public class Shader {
     }
 
     public static Shader getMaterialFlatShader() {
-        return loadShaderRelative("single_colors_flat_shading", "single_material_flat_shading");
+        return loadShaderRelative("single_material_flat_shading", "flat_shading");
+    }
+
+    public static Shader getWaterShader() {
+        return loadShaderRelative("single_material_flat_shading", "water_flat_shading");
     }
 }

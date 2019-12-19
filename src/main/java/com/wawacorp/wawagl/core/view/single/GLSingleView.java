@@ -1,5 +1,6 @@
 package com.wawacorp.wawagl.core.view.single;
 
+import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.view.buffer.IndexBufferObject;
 import com.wawacorp.wawagl.core.view.buffer.VertexArrayObject;
 import com.wawacorp.wawagl.core.model.Mesh;
@@ -76,9 +77,12 @@ public class GLSingleView extends GLView {
 
     @Override
     public void update(Observable observable, Object o) {
-        if (o instanceof float[]) { // vertices
+        if (o instanceof Mesh) { // vertices
             positionBuffer.bind();
-            positionBuffer.updateData((float[]) o);
+            positionBuffer.updateData(((Mesh) o).getVertices());
+            vertexArrayObject.getVBO(1).bind();
+            vertexArrayObject.getVBO(1).updateData(((Mesh) o).getNormals());
+            vertexArrayObject.getVBO(1).unbind();
             positionBuffer.unbind();
         }
         update();

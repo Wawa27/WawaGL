@@ -37,6 +37,7 @@ public class VertexArrayObject extends BufferObject {
         if (mesh.getIndices() != null) {
             bind();
             indexBufferObject = new IndexBufferObject(mesh.getIndices());
+            indexBufferObject.bind();
             unbind();
         } else {
             indexBufferObject = null;

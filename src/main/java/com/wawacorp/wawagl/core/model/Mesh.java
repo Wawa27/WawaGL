@@ -1,6 +1,7 @@
 package com.wawacorp.wawagl.core.model;
 
 import com.wawacorp.wawagl.core.model.animation.Armature;
+import org.joml.Vector3f;
 
 import java.io.Serializable;
 
@@ -43,12 +44,27 @@ public class Mesh implements Serializable {
         return vertices;
     }
 
+
+    public float getVertex(int index) {
+        return vertices[index];
+    }
+
     public void setVertices(float[] vertices) {
         this.vertices = vertices;
     }
 
     public void setVertex(int indice, float value) {
         this.vertices[indice] = value;
+    }
+
+    public void setNormal(int indice, float value) {
+        this.normals[indice] = value;
+    }
+
+    public void setNormal(int index, Vector3f normal) {
+        this.normals[index] = normal.x;
+        this.normals[index + 1] = normal.y;
+        this.normals[index + 2] = normal.z;
     }
 
     public float[] getNormals() {
@@ -113,6 +129,14 @@ public class Mesh implements Serializable {
 
     public Armature getArmature() {
         return armature;
+    }
+
+    public void getVertex(int index, Vector3f dest) {
+        dest.set(vertices[index], vertices[index + 1], vertices[index + 2]);
+    }
+
+    public void getNormal(int index, Vector3f dest) {
+        dest.set(normals[index], normals[index + 1], normals[index + 2]);
     }
 
     @Override

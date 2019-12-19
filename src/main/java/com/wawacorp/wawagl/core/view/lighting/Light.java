@@ -12,13 +12,13 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Light {
-    private Vector3f color;
+    private Vector4f color;
     private GLSingleView mesh;
     protected final Instance instance;
     protected final Entity entity;
 
     //TODO: Lights meshes should have the colors of the lights in the shader
-    public Light(Mesh mesh, Entity entity, Vector3f color) {
+    public Light(Mesh mesh, Entity entity, Vector4f color) {
         this.color = color;
         this.entity = entity;
         this.instance = new Instance(
@@ -32,11 +32,11 @@ public class Light {
         this.mesh = mesh == null ? null : new GLSingleView(mesh, instance, Shader.getMaterialShader());
     }
 
-    public Vector3f getColor() {
+    public Vector4f getColor() {
         return color;
     }
 
-    public void setColor(Vector3f color) {
+    public void setColor(Vector4f color) {
         this.color = color;
     }
 

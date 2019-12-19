@@ -14,7 +14,7 @@ uniform mat4 model;
 
 void main() {
     vec3 position = gl_in[0].gl_Position.xyz;
-    vec3 normal = oNormal[0].xyz;
+    vec3 normal = normalize(oNormal[0].xyz) * 32;
 
     gl_Position = projection * view * model * (vec4(position, 1.0));
     EmitVertex();
@@ -23,7 +23,7 @@ void main() {
     EndPrimitive();
 
     position = gl_in[1].gl_Position.xyz;
-    normal = oNormal[1].xyz;
+    normal = normalize(oNormal[1].xyz) * 32;
 
     gl_Position = projection * view * model * (vec4(position, 1.0));
     EmitVertex();
@@ -32,7 +32,7 @@ void main() {
     EndPrimitive();
 
     position = gl_in[2].gl_Position.xyz;
-    normal = oNormal[2].xyz;
+    normal = normalize(oNormal[2].xyz) * 32;
 
     gl_Position = projection * view * model * (vec4(position, 1.0));
     EmitVertex();

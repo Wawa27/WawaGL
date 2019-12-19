@@ -7,10 +7,10 @@ layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoord;
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    vec3 emissive;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    vec4 emissive;
     float density;
     float specular_exponent;
     float transparency;
@@ -20,15 +20,13 @@ struct Material {
 struct PointLight {
     vec3 position;
     float a;
-    vec3 color;
-    float b;
+    vec4 color;
 };
 
 struct DirectionalLight {
     vec3 direction;
     float a;
-    vec3 color;
-    float b;
+    vec4 color;
 };
 
 struct SpotLight {
@@ -36,8 +34,7 @@ struct SpotLight {
     float a;
     vec3 direction;
     float b;
-    vec3 color;
-    float c;
+    vec4 color;
     float cutoff;
 };
 
@@ -51,10 +48,10 @@ layout(std140, binding = 1) uniform LightScene {
 } lightScene;
 
 uniform Material material = {
-    { 1, 1, 1 },
-    { 1, 1, 1 },
-    { 1, 1, 1 },
-    { 1, 1, 1 },
+    { 1, 1, 1, 1 },
+    { 1, 1, 1, 1 },
+    { 1, 1, 1, 1 },
+    { 1, 1, 1, 1 },
     1,
     1,
     1,
@@ -62,6 +59,7 @@ uniform Material material = {
 };
 
 out flat vec4 oColor;
+out vec4 oPosition;
 out vec4 gl_Position;
 
 layout(std140, binding = 0) uniform ViewProjection {
@@ -76,43 +74,44 @@ void main() {
     vec3 normalViewSpace = inverse(transpose(mat3(view * model))) * normal;
 
     gl_Position = projection * view * model * vec4(position, 1.0);
+    oPosition = vec4(position, 1.0);
 
     // ambient
-    float ambientStrength = .3;
+    float ambientStrength = .15;
     float diffuseStrength = .6;
-    float specularStrength = .1;
+    float specularStrength = .05;
 
-    vec3 ambient = ambientStrength * material.ambient * colors;
+    vec4 ambient = ambientStrength * material.ambient;
     vec3 objectPosition = normalize(positionViewSpace);
     vec3 objectNormal = normalize(normalViewSpace);
     vec3 eye = -objectPosition; // vector eye -> object
 
-    vec3 res = ambient;
+    vec4 res = ambient;
     for (int i = 0; i < lightScene.activePointLights; i++) {
         // diffuse
         vec3 lightToObject = normalize(lightScene.pointLights[i].position - positionViewSpace); // vector object -> light
         float lightToObjectAngle = max(dot(objectNormal, lightToObject), 0.0);
-        vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse;
+        vec4 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse;
 
         // specular
         vec3 lightReflection = normalize(reflect(-lightToObject, objectNormal));// reflection of vector object -> light
         float lightReflectionToEye = pow(max(dot(eye, lightReflection), 0.0), 16);
-        vec3 specular = lightReflectionToEye * specularStrength * material.specular * lightScene.pointLights[i].color;
+        vec4 specular = lightReflectionToEye * specularStrength * material.specular * lightScene.pointLights[i].color;
 
         res += (diffuse + specular);
     }
     for (int i = 0; i < lightScene.activeDirectionalLights; i++) {
         // diffuse
-        float lightToObjectAngle = max(dot(objectNormal, lightScene.directionLights[i].direction), 0.0);
-        vec3 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse;
+        float lightToObjectAngle = max(dot(objectNormal, lightScene.directionalLights[i].direction), 0.0);
+        vec4 diffuse = lightToObjectAngle * diffuseStrength * material.diffuse * lightScene.directionalLights[i].color;
 
         // specular
-        vec3 lightReflection = normalize(reflect(-lightScene.directionLights[i].direction, objectNormal));// reflection of vector object -> light
+        vec3 lightReflection = normalize(reflect(-lightScene.directionalLights[i].direction, objectNormal));// reflection of vector object -> light
         float lightReflectionToEye = pow(max(dot(eye, lightReflection), 0.0), 16);
-        vec3 specular = lightReflectionToEye * specularStrength * material.specular * lightScene.pointLights[i].color;
+        vec4 specular = lightReflectionToEye * specularStrength * material.specular * lightScene.directionalLights[i].color;
 
-        res += diffuse;
+        res += (diffuse + specular);
     }
 
-    oColor = vec4(res, 1.0);
+    oColor = res;
 }

@@ -7,6 +7,7 @@ import com.wawacorp.wawagl.core.model.Mesh;
 import com.wawacorp.wawagl.core.model.entity.Entity;
 import com.wawacorp.wawagl.core.model.shape.Cube;
 import com.wawacorp.wawagl.core.game.Game;
+import com.wawacorp.wawagl.core.model.shape.Rectangle;
 import com.wawacorp.wawagl.core.scene.Scene;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
@@ -22,7 +23,6 @@ public class SingleMeshDemo extends Scene {
     private final Instance instance;
     private final Entity cubeEntity;
     private final GLSingleView cube;
-    private final GLNormalView normalView;
 
     public SingleMeshDemo() {
         cubeEntity = new Entity() {
@@ -36,17 +36,15 @@ public class SingleMeshDemo extends Scene {
                 new MaterialProperty("material"),
                 new FlatColorProperty("color", FlatColor.GREEN)
         );
-        Mesh mesh = new LowPolyHeightmapTerrain(4, 4);
+        Mesh mesh = new Rectangle(4, 4);
         cube = new GLSingleView(mesh, instance);
         LightScene lightScene = new LightScene();
-        normalView = new GLNormalView(cube);
         cubeEntity.rotate(0, .0001f, 0);
     }
 
     @Override
     public void onLoop() {
         cube.draw();
-        normalView.draw();
     }
 
     public static void main(String[] args) {

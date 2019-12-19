@@ -186,7 +186,7 @@ public class LowPolyHeightmapTerrain extends Terrain {
                         (.125f * ((SimplexNoise.noise(8 * i, 8 * j) + 1) / 2f)) +
                         ((0.125f / 2f) * ((SimplexNoise.noise(16 * i, 16 * j) + 1) / 2f))
                 , 1.3f) * maxHeight;
-//        height *= gradiant;
+        height *= gradiant;
 
         return height;
     }

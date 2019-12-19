@@ -9,6 +9,6 @@ public class GameManager {
     }
 
     public void onLoop() {
-        EntityManager.onLoop();
+        EntityManager.loop();
     }
 }

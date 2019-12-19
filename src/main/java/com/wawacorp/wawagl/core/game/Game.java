@@ -65,6 +65,10 @@ public class Game {
 
     private Font font;
 
+    protected static double framePerSecond;
+
+    protected static long lastTime;
+
     public Game(int width, int height) {
         this(width, height, "WawaGL");
     }
@@ -137,6 +141,7 @@ public class Game {
         GLUtil.setupDebugMessageCallback();
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
+
 //        glEnable(GL_STENCIL_TEST);
 //
 //        // OUTLINE
@@ -155,13 +160,15 @@ public class Game {
             // Input
             pollEvents();
             // Process
+            framePerSecond = 1000f / (System.currentTimeMillis() - lastTime);
+            lastTime = System.currentTimeMillis();
 //            try {
 //                if (elapsedTime + timePerFrame - System.currentTimeMillis() > 0) Thread.sleep((long) ((elapsedTime + timePerFrame - System.currentTimeMillis()) / 1e3));
 //            } catch (InterruptedException e) {
 //                throw new RuntimeException(e);
 //            }
 //            elapsedTime = System.currentTimeMillis();
-            EntityManager.onLoop();
+            EntityManager.loop();
 //            Animation.runAll();
 
             Camera.ACTIVE.bind();
@@ -275,5 +282,14 @@ public class Game {
         } else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
+    }
+
+    public static void enableTransparency() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    public static double getFramePerSecond() {
+        return framePerSecond;
     }
 }
