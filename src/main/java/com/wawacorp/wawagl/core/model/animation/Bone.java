@@ -29,6 +29,7 @@ public class Bone extends Observable {
         this.currentLocalTransform = new Matrix4f();  // identity for bind pose
         this.currentGlobalTransform = new Matrix4f();
         this.bones = new ArrayList<>();
+        System.out.println(offsetMatrix);
     }
 
     public Bone(String name, Matrix4f currentLocalTransform, boolean zzz) {

@@ -8,10 +8,8 @@ D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\buffer\I
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\buffer\texture\TextureAtlas.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\View.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\shape\InfiniteRectangle.java
-D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\geometry\LineMesh.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\mesh\VectorMesh.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\instance\property\ArmatureProperty.java
-D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\geometry\GeometryMesh.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\dd\background\Sky2D.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\shape\Cube.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\gui\Hud.java
@@ -54,6 +52,7 @@ D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\demo\single\Single
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\camera\FPSCamera.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\gui\custom\layout\Layout.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\lighting\SpotLight.java
+D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\single\GLBoneView.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\model\Model.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\GLView.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\camera\SimpleCamera.java
@@ -67,6 +66,7 @@ D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\demo\hordes\GameSc
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\buffer\FrameBufferObject.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\buffer\ubo\ShaderAnimationUBO.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\animation\Animation.java
+D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\utils\MathUtils.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\gui\nanovg\Font.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\camera\TPSCamera.java
 D:\Wawa\IdeaProjects\WawaGL\src\main\java\com\wawacorp\wawagl\core\view\gui\nanovg\NanoVG.java

@@ -16,8 +16,12 @@ import com.wawacorp.wawagl.core.view.GLModel;
 import com.wawacorp.wawagl.core.view.instance.Instance;
 import com.wawacorp.wawagl.core.view.instance.property.EntityProperty;
 import com.wawacorp.wawagl.core.view.instance.property.FlatColorProperty;
+import com.wawacorp.wawagl.core.view.single.GLBoneView;
 import com.wawacorp.wawagl.core.view.single.GLSingleView;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 
@@ -25,11 +29,9 @@ public class AnimationDemo extends Scene {
     private TPSCamera camera;
     private GLModel model;
     private Entity entity;
-    private Terrain terrain;
-    private GLSingleView terrainView;
+    private ArrayList<GLBoneView> glBoneViews;
 
     public AnimationDemo() {
-        terrain = new HeightmapTerrain(Bitmap.load("textures/heightmaps/heightmap.png"));
         Entity terrainEntity = new Entity() {
             @Override
             public void onLoop() {
@@ -37,13 +39,7 @@ public class AnimationDemo extends Scene {
             }
         };
         terrainEntity.scale(10, 1, 10);
-        terrainView = new GLSingleView(
-                terrain, new Instance(
-                new FlatColorProperty(FlatColor.WHITE),
-                new EntityProperty(terrainEntity)
-        ), Shader.getColorArrayShader()
-        );
-        AScene scene = AssimpLoader.loadScene("models/pose/POSE.fbx", "");
+        AScene scene = AssimpLoader.loadScene("models/tree_2/tree.fbx", "");
         Model rootModel = scene.getRoot();
         entity = new Entity() {
             @Override
@@ -56,6 +52,10 @@ public class AnimationDemo extends Scene {
         camera = new TPSCamera(Perspective.DEFAULT, entity, 8, (float) Math.PI / 8, 0, 0);
         Camera.setActive(camera);
         new CameraController(camera);
+        glBoneViews = new ArrayList<>();
+        for (Mesh mesh : model.getModel().getAllMeshes()) {
+            if (mesh.getArmature() != null) glBoneViews.add(new GLBoneView(model, mesh.getArmature().getBones()[0]));
+        }
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AnimationDemo extends Scene {
         glfwSetCursorPos(Game.window, Game.width / 2f, Game.height / 2f);
         Animation.loop();
         model.draw();
-        terrainView.draw();
+        for (GLBoneView boneView : glBoneViews) boneView.draw();
     }
 
     public static void main(String[] args) {

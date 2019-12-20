@@ -17,13 +17,13 @@ public class WaterEntity extends Entity {
 
     @Override
     public void onLoop() {
-        timeOffset +=.000075/4f;
-        yOffset+=.00006;
-        xOffset+=.00006;
+        timeOffset +=.0001f;
+        yOffset+=.00009;
+        xOffset+=.00009;
         for (int i = 0; i < water.getDepth(); i++) {
             for (int j = 0; j < water.getWidth(); j++) {
                 int index = i * water.getWidth() * 3 + j * 3 + 1;
-                water.setVertex(index, (((1 + SimplexNoise.noise(j/7.5f + xOffset, i/7.5f + yOffset, timeOffset))) * 6));
+                water.setVertex(index,  (1 + SimplexNoise.noise(j + xOffset, i + yOffset, timeOffset)) / 2f);
             }
         }
         // TODO: move the normal calculation part to the GPU instead

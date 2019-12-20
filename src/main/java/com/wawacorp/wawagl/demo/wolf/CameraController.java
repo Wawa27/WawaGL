@@ -31,7 +31,7 @@ public class CameraController extends CursorListener {
     private final class ScrollListener extends com.wawacorp.wawagl.core.controller.event.ScrollListener {
         @Override
         public void onScroll(double xoffset, double yoffset) {
-            camera.setDistance(camera.getDistance() + (float) yoffset * 128);
+            camera.setDistance(camera.getDistance() + (float) yoffset);
         }
     }
 

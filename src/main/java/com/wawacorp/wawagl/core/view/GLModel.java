@@ -72,7 +72,7 @@ public class GLModel implements View {
                     // Common properties
                     new EntityProperty(new AttachedEntity(rootEntity, new Vector3f())),
                     new MaterialProperty("material", mesh.getMaterial()),
-                    new LightSceneProperty("Lightscene", WolfScene.lightScene)
+                    new LightSceneProperty("lightScene", WolfScene.lightScene)
             );
             String vertexShadex;
             String fragmentShader;
@@ -84,14 +84,11 @@ public class GLModel implements View {
                 vertexShadex = "single";
             }
 
-            if (mesh.getMaterialTexture() != null) {
-                fragmentShader = "single_texture";
-            } else {
-                fragmentShader = "single_material";
-            }
+            fragmentShader = "single_material";
 
             if (mesh.getMaterialTexture() != null && mesh.getMaterialTexture().getAmbientPath() != null && mesh.getMaterialTexture().getDiffusePath() != null
-            && mesh.getMaterialTexture().getSpecularPath() != null) {
+                    && mesh.getMaterialTexture().getSpecularPath() != null) {
+                fragmentShader = "single_texture";
                 instance.addProperty(new MaterialTextureProperty("texture", new MaterialTextureView(mesh.getMaterialTexture())));
             }
             Shader shader = Shader.loadShaderRelative(vertexShadex, fragmentShader);

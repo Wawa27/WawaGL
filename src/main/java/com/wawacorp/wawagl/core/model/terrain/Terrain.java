@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public abstract class Terrain extends Mesh {
     protected final float[][] heights;
     protected final ArrayList<Entity> entities;
+    protected final ArrayList<Entity> trees;
 
     public Terrain(int x, int y) {
         heights = new float[y][x];
         entities = new ArrayList<>();
+        trees = new ArrayList<>();
     }
 
     public float getHeight(int x, int z) {
@@ -32,6 +34,17 @@ public abstract class Terrain extends Mesh {
                 }
             }
          }
+    }
+
+    public void addTree(Entity entity) {
+        trees.add(entity);
+
+        float terrainHeightAtPlayerPosition = getHeight((int) entity.getPosition().x, (int) entity.getPosition().z);
+        if (terrainHeightAtPlayerPosition != Float.NEGATIVE_INFINITY) {
+            if (terrainHeightAtPlayerPosition > entity.getPosition().y) {
+                entity.getPosition().set(1, terrainHeightAtPlayerPosition + .1f);
+            }
+        }
     }
 
     public void addEntity(Entity entity) {

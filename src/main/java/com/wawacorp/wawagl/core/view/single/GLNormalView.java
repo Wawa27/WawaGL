@@ -15,14 +15,12 @@ import static org.lwjgl.opengl.GL46.*;
  *
  */
 public class GLNormalView extends GLView {
-    private GLView meshView;
 
     public GLNormalView(GLView meshView) {
-        this.meshView = meshView;
         this.shader = Shader.loadShaderRelative("line", "debug", "line");
         this.vertexArrayObject = meshView.getVertexArrayObject();
         this.instance = new Instance(new EntityProperty(((EntityProperty) meshView.getInstance().getProperty("model")).getEntity()));
-        this.instance.addObserver(this::update);
+        this.instance.addObserver(this);
         this.vertexCount = meshView.getVertexCount();
     }
 

@@ -90,6 +90,14 @@ public class SkeletalAnimation extends Animation {
 
     public void addBoneAnimation(BoneAnimation boneAnimation) {
         this.boneAnimations.add(boneAnimation);
+
+        for (BoneAnimation animation : boneAnimations) {
+            animation.updateCurrentBoneTransform(0);
+        }
+
+        for (Bone bone : rootBones) {
+            bone.applyBoneTransform(inverseGlobalTransform, new Matrix4f());
+        }
     }
 
     public void setInverseGlobalTransform(Matrix4f inverseGlobalTransform) {

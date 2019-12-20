@@ -28,10 +28,11 @@ public class Bitmap {
     }
 
     public static Bitmap load(String relativePath) {
-        if (relativePath == null) return null;
+        if (relativePath == null) {
+            System.err.println("Tried to load a null path texture");
+            return null;
+        }
         InputStream stream = Bitmap.class.getClassLoader().getResourceAsStream(relativePath);
-        String[] ext = relativePath.split("\\.");
-        System.out.println(relativePath);
         return loadJPEG(stream);
     }
 

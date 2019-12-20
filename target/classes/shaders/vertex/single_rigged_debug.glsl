@@ -22,7 +22,7 @@ layout(std140, binding = 0) uniform ViewProjection {
 };
 
 uniform mat4 model;
-uniform mat4[MAX_BONE_SIZE] armature;
+uniform mat4 armature[MAX_BONE_SIZE];
 
 void main() {
     mat4 boneTransform = weights.r * armature[ids.r];
@@ -34,7 +34,6 @@ void main() {
     oPosition = vec3(view * model * localSpacePosition);
     oNormal = normalize(transpose(inverse(mat3(view * model))) * normal);
     oTexCoord = texCoord;
-    oColor = ids.rgb;
 
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    gl_Position = projection * view * model * localSpacePosition;
 }

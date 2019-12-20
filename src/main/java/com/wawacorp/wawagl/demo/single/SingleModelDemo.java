@@ -17,7 +17,7 @@ public class SingleModelDemo extends Scene {
     private final GLModel model;
 
     public SingleModelDemo() {
-        Model model = AssimpLoader.loadScene("models/new_char/new_char.fbx").getRoot();
+        Model model = AssimpLoader.loadScene("models/guy/source/guyv2.fbx").getRoot();
         this.model = GLModel.getSingleModel(model, new Entity() {
             @Override
             public void onLoop() {

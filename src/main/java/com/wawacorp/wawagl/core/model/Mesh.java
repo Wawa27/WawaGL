@@ -1,12 +1,20 @@
 package com.wawacorp.wawagl.core.model;
 
 import com.wawacorp.wawagl.core.model.animation.Armature;
+import com.wawacorp.wawagl.core.utils.MathUtils;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.io.Serializable;
 
 public class Mesh implements Serializable {
     protected String name;
+
+    /**
+     * Global space -> mesh space matrix
+     */
+    protected Matrix4f meshMatrix;
 
     protected float[] vertices;
     protected float[] normals;
@@ -57,6 +65,12 @@ public class Mesh implements Serializable {
         this.vertices[indice] = value;
     }
 
+    public void setVertex(int index, float x, float y, float z) {
+        vertices[index] = x;
+        vertices[index + 1] = y;
+        vertices[index + 2] = z;
+    }
+
     public void setNormal(int indice, float value) {
         this.normals[indice] = value;
     }
@@ -65,6 +79,12 @@ public class Mesh implements Serializable {
         this.normals[index] = normal.x;
         this.normals[index + 1] = normal.y;
         this.normals[index + 2] = normal.z;
+    }
+
+    public void setNormal(int index, float x, float y, float z) {
+        normals[index] = x;
+        normals[index + 1] = x;
+        normals[index + 2] = x;
     }
 
     public float[] getNormals() {
@@ -137,6 +157,20 @@ public class Mesh implements Serializable {
 
     public void getNormal(int index, Vector3f dest) {
         dest.set(normals[index], normals[index + 1], normals[index + 2]);
+    }
+
+    public void setColor(int index, float r, float g, float b) {
+        colors[index] = r;
+        colors[index + 1] = g;
+        colors[index + 2] = b;
+    }
+
+    public void setMeshMatrix(Matrix4f meshMatrix) {
+        this.meshMatrix = meshMatrix;
+    }
+
+    public Matrix4f getMeshMatrix() {
+        return meshMatrix;
     }
 
     @Override

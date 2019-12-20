@@ -59,8 +59,9 @@ uniform Material material = {
 };
 
 out flat vec4 oColor;
-out vec4 oPosition;
+out vec3 oPosition;
 out vec4 gl_Position;
+out vec3 oNormal;
 
 layout(std140, binding = 0) uniform ViewProjection {
     mat4 view;
@@ -72,19 +73,22 @@ uniform mat4 model;
 void main() {
     vec3 positionViewSpace = vec3(view * model * vec4(position, 1.0));
     vec3 normalViewSpace = inverse(transpose(mat3(view * model))) * normal;
+    oNormal = normalViewSpace;
 
     gl_Position = projection * view * model * vec4(position, 1.0);
-    oPosition = vec4(position, 1.0);
+    oPosition = position;
 
     // ambient
-    float ambientStrength = .15;
-    float diffuseStrength = .6;
+    float ambientStrength = .1;
+    float diffuseStrength = .8;
     float specularStrength = .05;
 
     vec4 ambient = ambientStrength * material.ambient;
     vec3 objectPosition = normalize(positionViewSpace);
     vec3 objectNormal = normalize(normalViewSpace);
     vec3 eye = -objectPosition; // vector eye -> object
+
+    // In view space, all vertex with "negative" normals can be discarded
 
     vec4 res = ambient;
     for (int i = 0; i < lightScene.activePointLights; i++) {

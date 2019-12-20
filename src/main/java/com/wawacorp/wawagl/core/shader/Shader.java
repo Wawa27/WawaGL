@@ -401,4 +401,8 @@ public class Shader {
     public static Shader getWaterShader() {
         return loadShaderRelative("single_material_flat_shading", "water_flat_shading");
     }
+
+    public static Shader getDebugShader() {
+        return loadShaderRelative("single", "debug");
+    }
 }

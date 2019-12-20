@@ -22,12 +22,10 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class AssimpLoader {
 
-    // TODO: Add another methods without the texture folder
     public static AScene loadScene(String relativePath) {
         return loadScene(relativePath, relativePath);
     }
 
-    // TODO: Add another methods without the texture folder
     public static AScene loadScene(String relativePath, String texturePath) {
         AIFileIO fileIo = AIFileIO.create();
         AIFileOpenProcI fileOpenProc = new AIFileOpenProc() {
@@ -137,7 +135,7 @@ public class AssimpLoader {
         PointerBuffer aiCameraBuffer = aiScene.mCameras();
         for (int i = 0; i < aiScene.mNumCameras(); i++) {
             AICamera aiCamera = AICamera.create(aiCameraBuffer.get(i));
-            AScene.addCamera(new FPSCamera(new Perspective(aiCamera.mHorizontalFOV(), aiCamera.mAspect(), aiCamera.mClipPlaneNear(), aiCamera.mClipPlaneFar())));
+//            AScene.addCamera(new FPSCamera(new Perspective(aiCamera.mHorizontalFOV(), aiCamera.mAspect(), aiCamera.mClipPlaneNear(), aiCamera.mClipPlaneFar())));
         }
     }
 
@@ -210,7 +208,7 @@ public class AssimpLoader {
      * Finding the root bone
      * This is done by looking for all the node root's children, if one is in the bone list, it is the root bone
      *
-     * @param node    The root node
+     * @param node The root node
      * @return The root bone
      */
     public static List<AINode> findRootBones(AScene AScene, AINode node) {
@@ -230,6 +228,7 @@ public class AssimpLoader {
     /**
      * Construct the bone hierarchy
      * There can be more than one bone at the top most level of the tree
+     *
      * @param AScene
      * @param bone
      * @param parentNode
@@ -263,23 +262,20 @@ public class AssimpLoader {
 
         for (int i = 0; i < boneCount; i++) {
             AIBone bone = AIBone.create(aiBoneBuffer.get(i));
-            Bone b = AScene.getBoneHashMap(bone.mName().dataString());
-            if (b == null) {
-                b = toBone(bone);
-                AScene.addBone(b);
-            }
+            Bone b = toBone(bone);
+            AScene.addBone(b);
             bones[i] = b;
             AIVertexWeight.Buffer aiVertexWeightBuffer = bone.mWeights();
             for (int j = 0; j < bone.mNumWeights(); j++) {
                 AIVertexWeight weight = aiVertexWeightBuffer.get(j);
                 if (weights[weight.mVertexId() * 4] == 0) {
-                    weights[weight.mVertexId() * 4] =  weight.mWeight();
+                    weights[weight.mVertexId() * 4] = weight.mWeight();
                     ids[weight.mVertexId() * 4] = i;
                 } else if (weights[weight.mVertexId() * 4 + 1] == 0) {
-                    weights[weight.mVertexId() * 4 + 1] =  weight.mWeight();
+                    weights[weight.mVertexId() * 4 + 1] = weight.mWeight();
                     ids[weight.mVertexId() * 4 + 1] = i;
                 } else if (weights[weight.mVertexId() * 4 + 2] == 0) {
-                    weights[weight.mVertexId() * 4 + 2] =  weight.mWeight();
+                    weights[weight.mVertexId() * 4 + 2] = weight.mWeight();
                     ids[weight.mVertexId() * 4 + 2] = i;
                 } else if (weights[weight.mVertexId() * 4 + 3] == 0) {
                     weights[weight.mVertexId() * 4 + 3] = weight.mWeight();

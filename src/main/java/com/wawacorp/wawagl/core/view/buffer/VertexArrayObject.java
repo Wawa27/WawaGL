@@ -28,7 +28,7 @@ public class VertexArrayObject extends BufferObject {
         if (mesh.getNormals() != null) addVBO(new FloatArrayVBO(mesh.getNormals(), 3, 1, true));
         if (mesh.getTexCoords() != null) addVBO(new FloatArrayVBO(mesh.getTexCoords(), 2, 2, false));
         if (mesh.getArmature() != null) {
-            addVBO(new FloatArrayVBO(mesh.getArmature().getWeights(), 4, 3, true)); //TODO: normalize bone weights ???
+            addVBO(new FloatArrayVBO(mesh.getArmature().getWeights(), 4, 3, false)); //TODO: normalize bone weights ???
             addVBO(new IntArrayVBO(mesh.getArmature().getIds(), 4, 4, false));
         }
         if (mesh.getColors() != null) {

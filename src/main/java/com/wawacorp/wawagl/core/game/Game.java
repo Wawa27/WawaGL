@@ -289,6 +289,10 @@ public class Game {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    public static void enableBackfaceCulling() {
+        glEnable(GL_CULL_FACE);
+    }
+
     public static double getFramePerSecond() {
         return framePerSecond;
     }

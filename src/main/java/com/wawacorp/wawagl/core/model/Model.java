@@ -1,7 +1,9 @@
 package com.wawacorp.wawagl.core.model;
 
 import com.wawacorp.wawagl.core.animation.Animation;
+import com.wawacorp.wawagl.core.model.animation.Bone;
 import com.wawacorp.wawagl.core.model.animation.SkeletalAnimation;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -93,8 +95,14 @@ public class Model {
     }
 
     public void startAnimation() {
-        skeletalAnimation[0].start();
-        skeletalAnimation[0].setAnimationEndListener(this::startAnimation);
+        skeletalAnimation[1].start();
+    }
+
+    public void startAnimation(int animationIndex) {
+        if (currentAnimation != null) currentAnimation.stop();
+        skeletalAnimation[animationIndex].start();
+        skeletalAnimation[animationIndex].setAnimationEndListener(skeletalAnimation[animationIndex]::start);
+        currentAnimation = skeletalAnimation[animationIndex];
     }
 
     public void startAnimation(String name) {
@@ -104,6 +112,10 @@ public class Model {
                 currentAnimation = animation;
             }
         }
+    }
+
+    public void stopAnimation() {
+        currentAnimation.stop();
     }
 
     public SkeletalAnimation getCurrentAnimation() {

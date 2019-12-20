@@ -32,18 +32,16 @@ public class HeightmapTerrain extends Terrain {
                 int vertexOffset = i * image.getWidth() * 3 + j * 3;
                 float height = rgb / 755f;
 
-                vertices[vertexOffset] = (-image.getWidth() / 2f) + j; // x value
-                vertices[vertexOffset + 1] = height * 1; // y value
-                vertices[vertexOffset + 2] = (-image.getHeight() / 2f) + i; // z value
+                setVertex(vertexOffset, (-image.getWidth() / 2f) + j, 0, (-image.getHeight() / 2f) + i);
 
                 heights[i][j] = height;
 
-                normals[vertexOffset] = 0;
-                normals[vertexOffset + 1] = 1;
-                normals[vertexOffset + 2] = 0;
+                setNormal(vertexOffset, 0, 1, 0);
 
                 texCoords[i * image.getWidth() * 2 + j * 2] = j / (float) image.getWidth();
                 texCoords[i * image.getWidth() * 2 + j * 2 + 1] = i / (float) image.getHeight();
+
+                setColor(vertexOffset, 1, 0, 0);
             }
         }
 
@@ -65,51 +63,13 @@ public class HeightmapTerrain extends Terrain {
                 );
             }
         }
-
-        System.out.println(Arrays.toString(indices));
     }
 
     public void calculateColor(int vertex1Index, int vertex2Index, int vertex3Index) {
         float heights = (vertices[vertex1Index + 1] + vertices[vertex2Index + 1] + vertices[vertex3Index + 1]) / 3;
-
-        if (heights < 16) {
-            colors[vertex1Index] = 0;
-            colors[vertex1Index + 1] = 0;
-            colors[vertex1Index + 2] = 1;
-
-            colors[vertex2Index] = 0;
-            colors[vertex2Index + 1] = 0;
-            colors[vertex2Index + 2] = 1;
-
-            colors[vertex3Index] = 0;
-            colors[vertex3Index + 1] = 0;
-            colors[vertex3Index + 2] = 1;
-        }
-        if (heights > 16) {
-            colors[vertex1Index] = 0;
-            colors[vertex1Index + 1] = 1;
-            colors[vertex1Index + 2] = 0;
-
-            colors[vertex2Index] = 0;
-            colors[vertex2Index + 1] = 1;
-            colors[vertex2Index + 2] = 0;
-
-            colors[vertex3Index] = 0;
-            colors[vertex3Index + 1] = 1;
-            colors[vertex3Index + 2] = 0;
-        } else if (heights > 64) {
-            colors[vertex1Index] = 1;
-            colors[vertex1Index + 1] = 1;
-            colors[vertex1Index + 2] = 1;
-
-            colors[vertex2Index] = 1;
-            colors[vertex2Index + 1] = 1;
-            colors[vertex2Index + 2] = 1;
-
-            colors[vertex3Index] = 1;
-            colors[vertex3Index + 1] = 1;
-            colors[vertex3Index + 2] = 1;
-        }
+        setColor(vertex1Index, 1, 0, 0);
+        setColor(vertex2Index, 1, 0, 0);
+        setColor(vertex3Index, 1, 0, 0);
     }
 
     public int getWidth() {

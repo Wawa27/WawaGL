@@ -88,6 +88,10 @@ public class FileUtils {
         return newBuffer;
     }
 
+    public static InputStream getInputStream(String relativePath) throws FileNotFoundException {
+        return new FileInputStream(relativePath);
+    }
+
     public static String getAbsolutePath(String relativePath) {
         return FileUtils.class.getClassLoader().getResource(relativePath).getPath();
     }
